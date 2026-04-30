@@ -14,7 +14,7 @@ steps:
   - name: gcr.io/cloud-builders/docker
     args: [push, gcr.io/$PROJECT_ID/haiti-food-price-monitor:latest]
 
-  - name: gcr.io/google.com/cloud-sdk
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
     entrypoint: gcloud
     args:
       - run
