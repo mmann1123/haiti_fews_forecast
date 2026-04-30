@@ -13,18 +13,25 @@ Deploy to Streamlit Cloud:
 """
 
 import os
+import re
 import sys
+import xml.etree.ElementTree as ET
+from email.utils import parsedate_to_datetime
+
 import streamlit as st
 import duckdb
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+import requests
 from pathlib import Path
 from forecasting import fit_all_models, generate_all_forecasts, ForecastResult
 
+FEWS_HAITI_FEED_URL = "https://fews.net/taxonomy/term/514/feed"
+
 # Page config
 st.set_page_config(
-    page_title="Haiti Food Prices - FEWS NET",
+    page_title="Haiti Food Price Monitor",
     page_icon="🌾",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -312,6 +319,60 @@ def get_date_range():
     return pd.to_datetime(result[0]), pd.to_datetime(result[1])
 
 
+@st.cache_data(ttl=3600)
+def fetch_fews_haiti_reports(limit: int = 1):
+    """Fetch the latest FEWS NET Haiti reports from the public RSS feed.
+
+    Returns a list of dicts with keys: title, link, pub_date (formatted), summary.
+    Returns [] on any network/parse failure.
+    """
+    try:
+        resp = requests.get(FEWS_HAITI_FEED_URL, timeout=10)
+        resp.raise_for_status()
+        root = ET.fromstring(resp.content)
+    except Exception:
+        return []
+
+    items = []
+    for item in root.findall(".//item")[:limit]:
+        title = (item.findtext("title") or "").strip()
+        link = (item.findtext("link") or "").strip()
+        raw_date = (item.findtext("pubDate") or "").strip()
+        try:
+            pub_date = parsedate_to_datetime(raw_date).strftime("%B %d, %Y")
+        except Exception:
+            pub_date = raw_date
+
+        summary = re.sub(r"<[^>]+>", "", item.findtext("description") or "").strip()
+        summary = re.sub(r"\s+", " ", summary)
+        if len(summary) > 400:
+            summary = summary[:400].rsplit(" ", 1)[0] + "…"
+
+        items.append({"title": title, "link": link, "pub_date": pub_date, "summary": summary})
+    return items
+
+
+def render_fews_report_card():
+    """Render a card with the latest FEWS NET Haiti report and a link out."""
+    items = fetch_fews_haiti_reports(limit=1)
+    if not items:
+        return
+    item = items[0]
+
+    with st.container(border=True):
+        st.markdown("**📰 Latest FEWS NET Haiti report**")
+        if item["title"] and item["link"]:
+            st.markdown(f"#### [{item['title']}]({item['link']})")
+        elif item["title"]:
+            st.markdown(f"#### {item['title']}")
+        if item["pub_date"]:
+            st.caption(f"Published: {item['pub_date']}")
+        if item["summary"]:
+            st.write(item["summary"])
+        if item["link"]:
+            st.link_button("Read the full report on FEWS NET ↗", item["link"])
+
+
 def calculate_statistics(df: pd.DataFrame, price_col: str) -> dict:
     """Calculate summary statistics for the price data."""
     if df.empty:
@@ -346,7 +407,12 @@ def main():
     # Header
     st.title("🌾 Haiti Food Price Monitor")
     st.markdown(
-        "*Data from [FEWS NET](https://fews.net/) - Famine Early Warning Systems Network*"
+        "*Created by [Michael Mann, PhD](https://mmann1123.github.io/). "
+        "Price data sourced from the [FEWS NET Data Warehouse](https://fdw.fews.net/) "
+        "(Famine Early Warning Systems Network) under their "
+        "[data attribution policy](https://fews.net/data-attribution). "
+        "This dashboard is independent and is not affiliated with, endorsed by, "
+        "or operated by FEWS NET.*"
     )
 
     # Sidebar controls
@@ -579,6 +645,8 @@ def main():
 
             st.plotly_chart(fig, use_container_width=True)
 
+            render_fews_report_card()
+
             # Show data table
             with st.expander("View Data"):
                 display_df = mean_df[["period_date", price_col, "num_markets"]].copy()
@@ -654,6 +722,8 @@ def main():
             )
 
             st.plotly_chart(fig, use_container_width=True)
+
+            render_fews_report_card()
 
             # Show latest prices table
             with st.expander("Latest Prices by Market"):
@@ -831,6 +901,8 @@ def main():
 
                     st.plotly_chart(fig, use_container_width=True)
 
+                    render_fews_report_card()
+
                     # Forecast table
                     with st.expander("📋 Forecast Table"):
                         table_df = future_df[
@@ -985,6 +1057,8 @@ def main():
 
                     st.plotly_chart(fig, use_container_width=True)
 
+                    render_fews_report_card()
+
                     # Forecast comparison table
                     with st.expander("📋 Forecast Comparison Table"):
                         comparison_data = []
@@ -1012,9 +1086,12 @@ def main():
     # Footer
     st.markdown("---")
     st.caption(
-        "Data source: [FEWS NET Data Warehouse](https://fdw.fews.net/) | "
-        "Price data collected by CNSA/FEWS NET Haiti | "
-        "Updated monthly"
+        "Data source: [FEWS NET Data Warehouse](https://fdw.fews.net/) — "
+        "price data collected by CNSA/FEWS NET Haiti, used under the "
+        "[FEWS NET data attribution policy](https://fews.net/data-attribution). "
+        "This site is independent and not affiliated with or endorsed by FEWS NET. "
+        "Forecasts are produced by this dashboard, not by FEWS NET, and are "
+        "provided without warranty of accuracy or fitness for any purpose."
     )
 
 
