@@ -28,6 +28,7 @@ from pathlib import Path
 from forecasting import fit_all_models, generate_all_forecasts, ForecastResult
 
 FEWS_HAITI_FEED_URL = "https://fews.net/taxonomy/term/514/feed"
+FEWS_GLOBAL_PRICE_WATCH_FEED_URL = "https://fews.net/taxonomy/term/15/feed"
 
 # Page config
 st.set_page_config(
@@ -320,14 +321,14 @@ def get_date_range():
 
 
 @st.cache_data(ttl=3600)
-def fetch_fews_haiti_reports(limit: int = 1):
-    """Fetch the latest FEWS NET Haiti reports from the public RSS feed.
+def fetch_fews_feed(feed_url: str, limit: int = 1):
+    """Fetch the latest items from a FEWS NET RSS feed.
 
     Returns a list of dicts with keys: title, link, pub_date (formatted), summary.
     Returns [] on any network/parse failure.
     """
     try:
-        resp = requests.get(FEWS_HAITI_FEED_URL, timeout=10)
+        resp = requests.get(feed_url, timeout=10)
         resp.raise_for_status()
         root = ET.fromstring(resp.content)
     except Exception:
@@ -352,15 +353,14 @@ def fetch_fews_haiti_reports(limit: int = 1):
     return items
 
 
-def render_fews_report_card():
-    """Render a card with the latest FEWS NET Haiti report and a link out."""
-    items = fetch_fews_haiti_reports(limit=1)
+def _render_feed_card(label: str, feed_url: str):
+    items = fetch_fews_feed(feed_url, limit=1)
     if not items:
         return
     item = items[0]
 
     with st.container(border=True):
-        st.markdown("**📰 Latest FEWS NET Haiti report**")
+        st.markdown(f"**📰 {label}**")
         if item["title"] and item["link"]:
             st.markdown(f"#### [{item['title']}]({item['link']})")
         elif item["title"]:
@@ -371,6 +371,15 @@ def render_fews_report_card():
             st.write(item["summary"])
         if item["link"]:
             st.link_button("Read the full report on FEWS NET ↗", item["link"])
+
+
+def render_fews_report_card():
+    """Render two side-by-side cards: latest Haiti report and latest Global Price Watch."""
+    haiti_col, gpw_col = st.columns(2)
+    with haiti_col:
+        _render_feed_card("Latest FEWS NET Haiti report", FEWS_HAITI_FEED_URL)
+    with gpw_col:
+        _render_feed_card("Latest FEWS NET Global Price Watch", FEWS_GLOBAL_PRICE_WATCH_FEED_URL)
 
 
 def calculate_statistics(df: pd.DataFrame, price_col: str) -> dict:
@@ -406,14 +415,6 @@ def calculate_statistics(df: pd.DataFrame, price_col: str) -> dict:
 def main():
     # Header
     st.title("🌾 Haiti Food Price Monitor")
-    st.markdown(
-        "*Created by [Michael Mann, PhD](https://mmann1123.github.io/). "
-        "Price data sourced from the [FEWS NET Data Warehouse](https://fdw.fews.net/) "
-        "(Famine Early Warning Systems Network) under their "
-        "[data attribution policy](https://fews.net/data-attribution). "
-        "This dashboard is independent and is not affiliated with, endorsed by, "
-        "or operated by FEWS NET.*"
-    )
 
     # Sidebar controls
     st.sidebar.header("Settings")
@@ -1085,14 +1086,27 @@ def main():
 
     # Footer
     st.markdown("---")
-    st.caption(
-        "Data source: [FEWS NET Data Warehouse](https://fdw.fews.net/) — "
-        "price data collected by CNSA/FEWS NET Haiti, used under the "
-        "[FEWS NET data attribution policy](https://fews.net/data-attribution). "
-        "This site is independent and not affiliated with or endorsed by FEWS NET. "
-        "Forecasts are produced by this dashboard, not by FEWS NET, and are "
-        "provided without warranty of accuracy or fitness for any purpose."
-    )
+    cap_col, logo_col = st.columns([3, 1])
+    with cap_col:
+        st.caption(
+            "Created by [Michael Mann, PhD](https://mmann1123.github.io/). "
+            "Data source: [FEWS NET Data Warehouse](https://fdw.fews.net/) — "
+            "price data collected by CNSA/FEWS NET Haiti, used under the "
+            "[FEWS NET data attribution policy](https://fews.net/data-attribution). "
+            "This site is independent and not affiliated with or endorsed by FEWS NET. "
+            "Forecasts are produced by this dashboard, not by FEWS NET, and are "
+            "provided without warranty of accuracy or fitness for any purpose."
+        )
+    with logo_col:
+        logo_path = Path(__file__).parent / "static" / "gwugeog.png"
+        if logo_path.exists():
+            import base64
+            b64 = base64.b64encode(logo_path.read_bytes()).decode()
+            st.markdown(
+                f'<a href="https://geography.columbian.gwu.edu/" target="_blank" rel="noopener">'
+                f'<img src="data:image/png;base64,{b64}" width="280" alt="GW Geography &amp; Environment"></a>',
+                unsafe_allow_html=True,
+            )
 
 
 if __name__ == "__main__":
