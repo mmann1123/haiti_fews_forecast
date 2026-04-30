@@ -436,7 +436,11 @@ def main():
     # Date range
     min_date, max_date = get_date_range()
     date_range = st.sidebar.date_input(
-        "Date Range", value=(min_date, max_date), min_value=min_date, max_value=max_date
+        "Date Range",
+        value=(min_date, max_date),
+        min_value=min_date,
+        max_value=max_date,
+        key="date_range",
     )
 
     sidebar_refresh = st.sidebar.button(
@@ -459,6 +463,11 @@ def main():
             st.sidebar.warning(f"Sync saved locally but GCS upload failed: {exc}")
         st.session_state.forecast_models = {}
         st.cache_data.clear()
+        # Reset the date-range widget so it re-initialises against the new
+        # (min, max) returned by the freshly-uncached get_date_range(),
+        # otherwise the user keeps seeing data clipped to the pre-sync window.
+        st.session_state.pop("date_range", None)
+        st.rerun()
 
     # Get data
     mean_df = get_mean_prices(selected_commodity)
