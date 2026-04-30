@@ -54,15 +54,22 @@ if str(FEWS_ROOT) not in sys.path:
 
 
 def _db_needs_init() -> bool:
-    """Check if the database is missing or has no price data."""
+    """Check if the database is missing or has no price data.
+
+    Uses the cached read-write connection so we don't conflict with our own
+    DuckDB file lock on Streamlit re-runs.
+    """
     if not DB_PATH.exists():
         return True
     try:
-        con = duckdb.connect(str(DB_PATH), read_only=True)
-        count = con.execute(
-            "SELECT COUNT(*) FROM price_observations"
-        ).fetchone()[0]
-        con.close()
+        con = get_connection()
+        # If price_observations doesn't exist yet, treat as needs-init.
+        exists = con.execute(
+            "SELECT 1 FROM information_schema.tables WHERE table_name = 'price_observations'"
+        ).fetchone()
+        if not exists:
+            return True
+        count = con.execute("SELECT COUNT(*) FROM price_observations").fetchone()[0]
         return count == 0
     except Exception:
         return True
@@ -92,7 +99,8 @@ def _init_database():
         st.error("FEWS NET API returned no data.")
         st.stop()
 
-    with FEWSDatabase() as db:
+    con = get_connection()
+    with FEWSDatabase(con=con) as db:
         db.create_tables()
         stats = db.sync_dataframe(df)
         db.log_import(
@@ -106,26 +114,16 @@ def _init_database():
     return len(df), stats
 
 
-def _close_cached_connection():
-    """Close the cached read-only connection so we can open read-write for sync."""
-    try:
-        con = get_connection.__wrapped__() if hasattr(get_connection, '__wrapped__') else None
-    except Exception:
-        con = None
-    # Clear the cached resource to release the read-only connection
-    st.cache_resource.clear()
-
-
 def _incremental_sync():
     """Pull only new data since the last sync."""
     from database.fews_database import FEWSDatabase
     from fewsnet_haiti_downloader import FEWSNETClient
     from datetime import datetime, timedelta
 
-    # Must close cached read-only connection before opening read-write
-    _close_cached_connection()
+    # Reuse the cached read-write connection to avoid DuckDB file-lock conflicts.
+    con = get_connection()
 
-    with FEWSDatabase() as db:
+    with FEWSDatabase(con=con) as db:
         last_sync = db.get_last_sync_date()
 
     if last_sync:
@@ -151,7 +149,7 @@ def _incremental_sync():
     if df.empty:
         return 0, {"inserted": 0, "updated": 0, "errors": 0}
 
-    with FEWSDatabase() as db:
+    with FEWSDatabase(con=con) as db:
         db.create_tables()
         stats = db.sync_dataframe(df)
         db.log_import(
@@ -199,6 +197,12 @@ def _push_db_to_gcs() -> None:
 _bootstrap_db_from_gcs()
 
 
+@st.cache_resource
+def get_connection():
+    """Get database connection (cached, read-write so sync can reuse it)."""
+    return duckdb.connect(str(DB_PATH))
+
+
 # Auto-initialize database if needed
 if _db_needs_init():
     st.info("Database not found or empty. Pulling FEWS NET price data...")
@@ -210,13 +214,7 @@ if _db_needs_init():
         _push_db_to_gcs()
     except Exception as exc:
         st.warning(f"Could not upload seeded DB to GCS: {exc}")
-    st.cache_resource.clear()
-
-
-@st.cache_resource
-def get_connection():
-    """Get database connection (cached)."""
-    return duckdb.connect(str(DB_PATH), read_only=True)
+    st.cache_data.clear()
 
 
 @st.cache_data(ttl=3600)
@@ -775,6 +773,7 @@ def main():
                     selected_commodity,
                     currency="USD" if use_usd else "HTG",
                     min_months=24,
+                    conn=get_connection(),
                 )
 
                 st.session_state.forecast_models = results

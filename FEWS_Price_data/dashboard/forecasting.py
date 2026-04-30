@@ -40,20 +40,26 @@ class ForecastResult:
 
 
 def get_price_data(
-    db_path: str, product_name: str, currency: str = "HTG"
+    db_path: str, product_name: str, currency: str = "HTG",
+    conn: Optional["duckdb.DuckDBPyConnection"] = None,
 ) -> pd.DataFrame:
     """
     Query historical price data for a given product from the database.
 
     Args:
-        db_path: Path to DuckDB database
+        db_path: Path to DuckDB database (ignored if `conn` is provided)
         product_name: Name of the product/commodity
         currency: Currency for prices ('HTG' or 'USD')
+        conn: Existing DuckDB connection to reuse. When omitted, a new
+            connection is opened and closed locally. Pass an existing
+            connection to avoid same-process file-lock conflicts.
 
     Returns:
         DataFrame with columns: date, market, price, market_name
     """
-    conn = duckdb.connect(db_path, read_only=True)
+    owns_conn = conn is None
+    if owns_conn:
+        conn = duckdb.connect(db_path, read_only=True)
 
     # Determine price column based on currency
     price_col = "value" if currency == "HTG" else "common_currency_price"
@@ -73,7 +79,8 @@ def get_price_data(
     """
 
     df = conn.execute(query, [product_name]).fetchdf()
-    conn.close()
+    if owns_conn:
+        conn.close()
 
     # Convert date to datetime
     df["date"] = pd.to_datetime(df["date"])
@@ -254,7 +261,8 @@ def fit_market_average_model(
 
 
 def fit_all_models(
-    db_path: str, product_name: str, currency: str = "HTG", min_months: int = 24
+    db_path: str, product_name: str, currency: str = "HTG", min_months: int = 24,
+    conn: Optional["duckdb.DuckDBPyConnection"] = None,
 ) -> Tuple[Dict[str, ForecastResult], Dict[str, Dict]]:
     """
     Fit Prophet models for all markets with sufficient data, plus market average.
@@ -269,7 +277,7 @@ def fit_all_models(
         Tuple of (results_dict, availability_dict)
     """
     # Get price data
-    df = get_price_data(db_path, product_name, currency)
+    df = get_price_data(db_path, product_name, currency, conn=conn)
 
     if len(df) == 0:
         return {}, {}

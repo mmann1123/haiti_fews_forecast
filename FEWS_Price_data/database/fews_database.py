@@ -26,24 +26,31 @@ SCHEMA_PATH = Path(__file__).parent / "schema.sql"
 class FEWSDatabase:
     """Database manager for FEWS NET Haiti price data."""
 
-    def __init__(self, db_path: Optional[Path] = None):
+    def __init__(self, db_path: Optional[Path] = None, con: Optional[duckdb.DuckDBPyConnection] = None):
         """
         Initialize database connection.
 
         Args:
             db_path: Path to DuckDB file. Defaults to fews_haiti.duckdb in same directory.
+            con: Existing DuckDB connection to reuse. If provided, this manager will
+                NOT open or close the connection — useful when sharing a single
+                writable connection (e.g. with Streamlit's cache_resource) to avoid
+                file-lock conflicts.
         """
         self.db_path = db_path or DEFAULT_DB_PATH
-        self.con = None
+        self.con = con
+        self._owns_con = con is None
 
     def connect(self):
-        """Open database connection."""
-        self.con = duckdb.connect(str(self.db_path))
+        """Open database connection (no-op if one was injected)."""
+        if self.con is None:
+            self.con = duckdb.connect(str(self.db_path))
+            self._owns_con = True
         return self
 
     def close(self):
-        """Close database connection."""
-        if self.con:
+        """Close database connection (no-op if connection was injected)."""
+        if self.con and self._owns_con:
             self.con.close()
             self.con = None
 
@@ -324,13 +331,10 @@ class FEWSDatabase:
         ])
 
     def get_last_sync_date(self) -> Optional[str]:
-        """Get the end date of the last successful sync."""
-        result = self.con.execute("""
-            SELECT date_range_end FROM import_log
-            WHERE status = 'success'
-            ORDER BY import_date DESC
-            LIMIT 1
-        """).fetchone()
+        """Get the latest period_date actually present in price_observations."""
+        result = self.con.execute(
+            "SELECT MAX(period_date) FROM price_observations"
+        ).fetchone()
 
         if result and result[0]:
             return str(result[0])
