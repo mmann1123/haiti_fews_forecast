@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+
+# Environment / secrets
+.env
+.envrc
+*.json.key
+keys/
+
+# DuckDB — the canonical copy lives in GCS, not git
+*.duckdb
+*.duckdb.wal
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Local data dumps that shouldn't ship
+FEWS_Price_data/data/
+FEWS_Price_data/csv/

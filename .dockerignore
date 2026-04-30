@@ -1,0 +1,35 @@
+.git
+.gitignore
+.github
+__pycache__
+*.pyc
+*.pyo
+.venv
+venv
+env
+.env
+.envrc
+
+# Other subprojects not deployed by this image
+haiti_school_feeding_dashboard/
+CNSA_Price_data/
+
+# Local DuckDB and bulky data; the deployed app pulls the DB from GCS at runtime
+**/*.duckdb
+**/*.duckdb.wal
+FEWS_Price_data/data/
+FEWS_Price_data/csv/
+FEWS_Price_data/csv_openai/
+
+# Notebooks and editor cruft
+*.ipynb
+.ipynb_checkpoints
+.vscode
+.idea
+.DS_Store
+
+# Plan/docs artifacts
+.claude
+docs/
+*.md
+!FEWS_Price_data/dashboard/README.md
