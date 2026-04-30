@@ -23,6 +23,10 @@ steps:
       - --image=gcr.io/$PROJECT_ID/haiti-food-price-monitor:$COMMIT_SHA
       - --region=us-central1
       - --platform=managed
+      - --max-instances=1
+      - --concurrency=10
+      - --cpu=1
+      - --memory=2Gi
 
 images:
   - gcr.io/$PROJECT_ID/haiti-food-price-monitor:$COMMIT_SHA
