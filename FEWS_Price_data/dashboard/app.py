@@ -668,7 +668,7 @@ def main():
                 st.dataframe(latest_df, use_container_width=True)
 
     with tab3:
-        st.subheader(f"8-Month Price Forecast: {selected_commodity}")
+        st.subheader(f"12-Month Price Forecast: {selected_commodity}")
         st.markdown(
             "*Forecasts generated using Facebook Prophet with automatic seasonality detection*"
         )
@@ -691,7 +691,7 @@ def main():
         forecast_horizon = st.slider(
             "Forecast Horizon (Months)",
             min_value=1,
-            max_value=8,
+            max_value=12,
             value=8,
             help="Number of months to forecast into the future",
         )
@@ -750,29 +750,24 @@ def main():
                     forecast_df = forecasts["Market Average"]
                     model = results["Market Average"].model
 
-                    # Split historical and future
-                    historical_df = forecast_df[
-                        forecast_df["ds"]
-                        <= forecast_df["ds"].max()
-                        - pd.DateOffset(months=forecast_horizon)
-                    ]
-                    future_df = forecast_df[
-                        forecast_df["ds"]
-                        > forecast_df["ds"].max()
-                        - pd.DateOffset(months=forecast_horizon)
-                    ]
+                    # Split historical and future using the training data's last date
+                    train_end = model.history["ds"].max()
+                    historical_df = forecast_df[forecast_df["ds"] <= train_end]
+                    future_df = forecast_df[forecast_df["ds"] > train_end]
 
                     # Create figure
                     fig = go.Figure()
 
-                    # Historical actuals
+                    # Historical actuals (raw observations the model was trained on)
+                    actuals = model.history[["ds", "y"]].tail(36)
                     fig.add_trace(
                         go.Scatter(
-                            x=historical_df["ds"].tail(36),  # Show last 36 months
-                            y=historical_df["yhat"].tail(36),
-                            mode="lines",
-                            name="Historical (Fitted)",
+                            x=actuals["ds"],
+                            y=actuals["y"],
+                            mode="lines+markers",
+                            name="Historical (Actual)",
                             line=dict(color="blue", width=2),
+                            marker=dict(size=4),
                             hovertemplate=f"Date: %{{x}}<br>Price: {currency_symbol}%{{y:.2f}}<extra></extra>",
                         )
                     )
@@ -933,12 +928,8 @@ def main():
                         if market_name in forecasts:
                             forecast_df = forecasts[market_name]
 
-                            # Get only future predictions
-                            future_df = forecast_df[
-                                forecast_df["ds"]
-                                > forecast_df["ds"].max()
-                                - pd.DateOffset(months=forecast_horizon)
-                            ]
+                            train_end = results[market_name].model.history["ds"].max()
+                            future_df = forecast_df[forecast_df["ds"] > train_end]
 
                             # Forecast
                             fig.add_trace(
@@ -1000,11 +991,8 @@ def main():
                         for market_name in selected_forecast_markets:
                             if market_name in forecasts:
                                 forecast_df = forecasts[market_name]
-                                future_df = forecast_df[
-                                    forecast_df["ds"]
-                                    > forecast_df["ds"].max()
-                                    - pd.DateOffset(months=forecast_horizon)
-                                ]
+                                train_end = results[market_name].model.history["ds"].max()
+                                future_df = forecast_df[forecast_df["ds"] > train_end]
 
                                 for _, row in future_df.iterrows():
                                     comparison_data.append(

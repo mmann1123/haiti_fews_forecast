@@ -26,6 +26,4 @@ EXPOSE 8080
 CMD streamlit run /app/FEWS_Price_data/dashboard/app.py \
     --server.port=${PORT} \
     --server.address=0.0.0.0 \
-    --server.headless=true \
-    --server.enableCORS=false \
-    --server.enableXsrfProtection=false
+    --server.headless=true

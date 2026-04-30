@@ -160,14 +160,14 @@ def fit_prophet_model(df: pd.DataFrame, market_name: str) -> ForecastResult:
         prophet_df = prepare_prophet_data(df, market_name)
         n_obs = len(prophet_df)
 
-        # Initialize Prophet with auto-detected seasonality
         model = Prophet(
-            seasonality_mode="multiplicative",  # Multiplicative for prices (percentage changes)
+            seasonality_mode="additive",
             yearly_seasonality="auto",
-            weekly_seasonality=False,  # Monthly data, so no weekly pattern
-            daily_seasonality=False,  # Monthly data, so no daily pattern
-            interval_width=0.95,  # 95% confidence intervals
-            changepoint_prior_scale=0.05,  # Default flexibility for trend changes
+            weekly_seasonality=False,
+            daily_seasonality=False,
+            interval_width=0.95,
+            changepoint_prior_scale=0.5,
+            changepoint_range=0.95,
         )
 
         # Fit model
@@ -197,8 +197,8 @@ def generate_forecast(model: Prophet, periods: int = 8) -> pd.DataFrame:
     Returns:
         DataFrame with forecast results including confidence intervals
     """
-    # Create future dataframe
-    future = model.make_future_dataframe(periods=periods, freq="MS")  # MS = month start
+    # Match period_date convention (month-end) used elsewhere in the dashboard
+    future = model.make_future_dataframe(periods=periods, freq="ME")
 
     # Generate forecast
     forecast = model.predict(future)
@@ -220,23 +220,22 @@ def fit_market_average_model(
         ForecastResult object for market average
     """
     try:
-        # Filter to available markets only
-        avg_df = df[df["market_name"].isin(available_markets)].copy()
-
-        # Calculate average price per date
-        avg_df = avg_df.groupby("date")["price"].mean().reset_index()
+        # Average across ALL markets (matches Tab 1's get_mean_prices behavior).
+        # available_markets is unused here on purpose — keeping the parameter for
+        # backwards compatibility with callers.
+        avg_df = df.groupby("date")["price"].mean().reset_index()
         avg_df.columns = ["ds", "y"]
 
         n_obs = len(avg_df)
 
-        # Initialize and fit Prophet model
         model = Prophet(
-            seasonality_mode="multiplicative",
+            seasonality_mode="additive",
             yearly_seasonality="auto",
             weekly_seasonality=False,
             daily_seasonality=False,
             interval_width=0.95,
-            changepoint_prior_scale=0.05,
+            changepoint_prior_scale=0.5,
+            changepoint_range=0.95,
         )
 
         model.fit(avg_df)
@@ -288,10 +287,11 @@ def fit_all_models(
         result = fit_prophet_model(df, market_name)
         results[market_name] = result
 
-    # Fit market average model if we have at least one market
-    if available_markets:
-        avg_result = fit_market_average_model(df, available_markets)
-        results["Market Average"] = avg_result
+    # Fit market average model on all markets in the data (mirrors Tab 1).
+    # Run independent of the per-market 24-month gate so the average is
+    # available even when no single market passes individually.
+    avg_result = fit_market_average_model(df, available_markets)
+    results["Market Average"] = avg_result
 
     return results, availability
 
