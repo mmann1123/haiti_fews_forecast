@@ -129,6 +129,53 @@ CREATE INDEX IF NOT EXISTS idx_price_obs_product ON price_observations(product_i
 CREATE INDEX IF NOT EXISTS idx_price_obs_market_product ON price_observations(market_id, product_id);
 
 -- ============================================================
+-- ACLED CONFLICT DATA
+-- ============================================================
+
+CREATE SEQUENCE IF NOT EXISTS seq_acled_events_id START 1;
+
+-- Raw ACLED events for Haiti (one row per event).
+CREATE TABLE IF NOT EXISTS acled_events (
+    id INTEGER PRIMARY KEY DEFAULT nextval('seq_acled_events_id'),
+    event_id_cnty VARCHAR UNIQUE NOT NULL,    -- ACLED's stable per-country event id
+    event_date DATE NOT NULL,
+    event_type VARCHAR,                       -- Battles, Violence against civilians, etc.
+    sub_event_type VARCHAR,
+    admin1 VARCHAR,                           -- Department (Ouest, Nord, ...)
+    admin2 VARCHAR,                           -- Commune
+    latitude DOUBLE,
+    longitude DOUBLE,
+    fatalities INTEGER DEFAULT 0,
+    imported_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_acled_event_date ON acled_events(event_date);
+CREATE INDEX IF NOT EXISTS idx_acled_event_type ON acled_events(event_type);
+
+-- Monthly national rollup. Rebuilt from scratch on every sync.
+CREATE TABLE IF NOT EXISTS acled_features_national (
+    period_date DATE PRIMARY KEY,             -- month-end, matches price_observations.period_date
+    acled_violent_events INTEGER,             -- Battles + Violence against civilians + Explosions/Remote violence
+    acled_fatalities INTEGER,                 -- sum(fatalities) all event types
+    acled_protest_blockade INTEGER,           -- Protests + Riots + any sub_event_type matching (blockade|roadblock)
+    acled_event_total INTEGER                 -- all events, all types
+);
+
+-- Per-market monthly rollup using a haversine buffer around each market's lat/lon.
+-- Rebuilt from scratch on every sync. An event may count toward multiple markets
+-- if it falls within multiple buffers -- exposure measure, not partition.
+CREATE TABLE IF NOT EXISTS acled_features_market (
+    market_id INTEGER NOT NULL,
+    period_date DATE NOT NULL,
+    radius_km DOUBLE NOT NULL DEFAULT 25.0,
+    acled_violent_events INTEGER,
+    acled_fatalities INTEGER,
+    acled_protest_blockade INTEGER,
+    acled_event_total INTEGER,
+    PRIMARY KEY (market_id, period_date, radius_km),
+    FOREIGN KEY (market_id) REFERENCES markets(id)
+);
+
+-- ============================================================
 -- VIEWS (Optional convenience views)
 -- ============================================================
 

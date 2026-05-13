@@ -288,3 +288,115 @@ gcloud storage cp \
     "gs://${GCS_BUCKET}/fews_haiti.local-debug.duckdb"
 export GCS_BLOB_NAME=fews_haiti.local-debug.duckdb
 ```
+
+
+---
+
+## 10. ACLED data refresh (monthly Cloud Run Job)
+
+The Streamlit service handles **price** data on demand from the dashboard.
+Conflict data from ACLED is refreshed on a separate, automated schedule via
+a Cloud Run **Job** triggered by Cloud Scheduler.
+
+### 10a. What it produces
+
+Each run:
+
+1. Downloads the canonical DuckDB from `gs://${BUCKET}/fews_haiti.duckdb`.
+2. Pulls new ACLED events for Haiti since `MAX(event_date)` in `acled_events`
+   (re-pulling the last 7 days to catch ACLED's late corrections).
+3. Upserts events, rebuilds `acled_features_national` and
+   `acled_features_market` from scratch.
+4. Exports two CSVs:
+   - `gs://${BUCKET}/acled_national.csv` — the contract for the R/NIMBLE
+     model (`fit_ar_sv.R`'s `ACLED_PATH` should point here).
+   - `gs://${BUCKET}/acled_by_market.csv` — long format, future-proofing for
+     per-market modeling.
+5. Uploads the updated DuckDB back to GCS.
+
+The R model lives in a separate repo and consumes `acled_national.csv` on
+its own cadence — this job's contract stops at "CSVs in GCS".
+
+### 10b. One-time setup
+
+```bash
+PROJECT_ID=$(gcloud config get-value project)
+BUCKET="${PROJECT_ID}-haiti-fews"
+REGION=us-central1
+
+# 1. Store myACLED credentials in Secret Manager (OAuth2 password grant)
+echo -n "<your-myacled-username>" | gcloud secrets create acled-username \
+    --replication-policy=automatic --data-file=-
+echo -n "<your-myacled-password>" | gcloud secrets create acled-password \
+    --replication-policy=automatic --data-file=-
+
+# 2. Build + deploy the job via Cloud Build
+gcloud builds submit \
+    --config=cloudbuild.acled-job.yaml \
+    --substitutions=_REGION=${REGION},_GCS_BUCKET=${BUCKET}
+
+# 3. Grant the job's runtime SA access to the secrets + GCS bucket
+PROJECT_NUMBER=$(gcloud projects describe "${PROJECT_ID}" --format='value(projectNumber)')
+JOB_SA="${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"
+
+for SECRET in acled-username acled-password; do
+  gcloud secrets add-iam-policy-binding "${SECRET}" \
+      --member="serviceAccount:${JOB_SA}" \
+      --role=roles/secretmanager.secretAccessor
+done
+
+gcloud storage buckets add-iam-policy-binding "gs://${BUCKET}" \
+    --member="serviceAccount:${JOB_SA}" \
+    --role=roles/storage.objectAdmin
+
+# 4. Backfill: full historical pull (one-time, ~30s)
+gcloud run jobs execute haiti-acled-refresh \
+    --region=${REGION} \
+    --args="sync,--full,--start=2018-01-01" \
+    --wait
+
+# 5. Schedule the monthly incremental refresh (5th of each month at 06:00 UTC)
+gcloud scheduler jobs create http monthly-acled-refresh \
+    --location=${REGION} \
+    --schedule="0 6 5 * *" \
+    --time-zone=Etc/UTC \
+    --uri="https://${REGION}-run.googleapis.com/apis/run.googleapis.com/v1/namespaces/${PROJECT_ID}/jobs/haiti-acled-refresh:run" \
+    --http-method=POST \
+    --oauth-service-account-email="${JOB_SA}"
+```
+
+### 10c. Environment variables and secrets (job runtime)
+
+| Variable        | Source           | Purpose                                              |
+| --------------- | ---------------- | ---------------------------------------------------- |
+| `ACLED_USERNAME`| Secret Manager   | `acled-username:latest` (myACLED account username)   |
+| `ACLED_PASSWORD`| Secret Manager   | `acled-password:latest` (myACLED account password)   |
+| `GCS_BUCKET`    | env var (deploy) | Same bucket as the Streamlit service                 |
+| `GCS_BLOB_NAME` | env var (deploy) | `fews_haiti.duckdb`                                  |
+| `FEWS_DB_PATH`  | env var (deploy) | `/tmp/fews_haiti.duckdb`                             |
+| `ACLED_CSV_DIR` | env var (deploy) | `/tmp` — where CSVs land before upload               |
+
+### 10d. Manual runs
+
+```bash
+# Trigger the next scheduled run immediately
+gcloud scheduler jobs run monthly-acled-refresh --location=${REGION}
+
+# Ad-hoc execution with overrides (e.g., full re-pull)
+gcloud run jobs execute haiti-acled-refresh \
+    --region=${REGION} \
+    --args="sync,--full,--start=2018-01-01" \
+    --wait
+
+# Inspect the most recent run
+gcloud run jobs executions list \
+    --job=haiti-acled-refresh --region=${REGION} --limit=5
+gcloud run jobs executions logs <EXECUTION_NAME> --region=${REGION}
+```
+
+### 10e. Cost
+
+- Cloud Run Job: ~30-60s/month × 1 vCPU × 1 GiB ≈ **<$0.01/month**
+- Cloud Scheduler: first 3 jobs free; this is free.
+- Secret Manager: 6 access ops/year ≈ free tier.
+- Net additional spend on top of §7's <$5/month: effectively zero.

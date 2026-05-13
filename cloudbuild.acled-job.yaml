@@ -1,0 +1,63 @@
+# Cloud Build pipeline for the haiti-acled-refresh Cloud Run Job.
+#
+# Triggered manually (or by a separate Cloud Build trigger on changes
+# under FEWS_Price_data/sync_acled.py / acled_haiti_downloader.py /
+# database/acled_database.py / Dockerfile.job).
+#
+# Required substitutions (defaults assume us-central1):
+#   _REGION       Cloud Run region                 [default: us-central1]
+#   _JOB_NAME     Cloud Run Job name               [default: haiti-acled-refresh]
+#   _GCS_BUCKET   Bucket for DuckDB + CSVs         [REQUIRED]
+#
+# Secret Manager bindings (created out-of-band):
+#   ACLED_USERNAME -> projects/$PROJECT_ID/secrets/acled-username/versions/latest
+#   ACLED_PASSWORD -> projects/$PROJECT_ID/secrets/acled-password/versions/latest
+
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -f
+      - Dockerfile.job
+      - -t
+      - gcr.io/$PROJECT_ID/haiti-acled-refresh:$COMMIT_SHA
+      - -t
+      - gcr.io/$PROJECT_ID/haiti-acled-refresh:latest
+      - .
+
+  - name: gcr.io/cloud-builders/docker
+    args: [push, gcr.io/$PROJECT_ID/haiti-acled-refresh:$COMMIT_SHA]
+
+  - name: gcr.io/cloud-builders/docker
+    args: [push, gcr.io/$PROJECT_ID/haiti-acled-refresh:latest]
+
+  # Create the job on first deploy, otherwise update it. `deploy` handles both.
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - jobs
+      - deploy
+      - ${_JOB_NAME}
+      - --image=gcr.io/$PROJECT_ID/haiti-acled-refresh:$COMMIT_SHA
+      - --region=${_REGION}
+      - --max-retries=1
+      - --task-timeout=600
+      - --memory=1Gi
+      - --cpu=1
+      - --set-env-vars=GCS_BUCKET=${_GCS_BUCKET},GCS_BLOB_NAME=fews_haiti.duckdb,FEWS_DB_PATH=/tmp/fews_haiti.duckdb,ACLED_CSV_DIR=/tmp
+      - --set-secrets=ACLED_USERNAME=acled-username:latest,ACLED_PASSWORD=acled-password:latest
+
+images:
+  - gcr.io/$PROJECT_ID/haiti-acled-refresh:$COMMIT_SHA
+  - gcr.io/$PROJECT_ID/haiti-acled-refresh:latest
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: E2_HIGHCPU_8
+
+substitutions:
+  _REGION: us-central1
+  _JOB_NAME: haiti-acled-refresh
+
+timeout: 900s

@@ -1,0 +1,23 @@
+FROM python:3.11-slim
+
+# Slim build deps. Prophet is intentionally not installed -- the job only
+# needs the ACLED downloader and DuckDB to rebuild features + export CSVs.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
+        curl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY FEWS_Price_data/requirements-job.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
+
+COPY FEWS_Price_data /app/FEWS_Price_data
+
+ENV PYTHONUNBUFFERED=1 \
+    FEWS_DB_PATH=/tmp/fews_haiti.duckdb \
+    ACLED_CSV_DIR=/tmp
+
+# Cloud Run Jobs invoke the container's CMD; --incremental is the default
+# Scheduler-triggered path. Pass `sync --full` etc. via job args to override.
+CMD ["python", "/app/FEWS_Price_data/sync_acled.py", "--incremental"]

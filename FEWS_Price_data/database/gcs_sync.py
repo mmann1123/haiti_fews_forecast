@@ -55,3 +55,15 @@ def upload_db_to_gcs(
     client = _get_client()
     blob = client.bucket(bucket).blob(blob_name)
     blob.upload_from_filename(str(local_path))
+
+
+def upload_blob(
+    local_path: Path,
+    bucket: str,
+    blob_name: str,
+    content_type: Optional[str] = None,
+) -> None:
+    """Upload an arbitrary local file (e.g., a CSV export) to GCS."""
+    client = _get_client()
+    blob = client.bucket(bucket).blob(blob_name)
+    blob.upload_from_filename(str(local_path), content_type=content_type)
