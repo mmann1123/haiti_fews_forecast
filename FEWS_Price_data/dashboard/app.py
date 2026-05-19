@@ -448,6 +448,108 @@ def calculate_statistics(df: pd.DataFrame, price_col: str) -> dict:
     return stats
 
 
+# ---------------------------------------------------------------------------
+# Manual ("what-if") observations
+# ---------------------------------------------------------------------------
+# Users in-country often know recent prices the lagged FEWS feed hasn't yet
+# captured. They can type entries here that are kept in st.session_state only
+# — never persisted to DuckDB. State lives under selected commodity so it
+# survives commodity switches inside one browser session but evaporates on a
+# fresh visit. See plan: experiments/.../when-i-run-this-zazzy-backus.md
+
+MANUAL_OBS_MARKER_COLOR = "#ff7f0e"  # orange diamond on every plot it appears on
+ALL_MARKETS_LABEL = "All markets"
+
+
+def _manual_obs_for(commodity: str) -> list:
+    return st.session_state.get("manual_observations", {}).get(commodity, [])
+
+
+def _hash_obs(obs: list) -> int:
+    """Stable hash of a manual-observation list so we can detect edits.
+
+    Sorted tuple of tuples is order-independent and dict-key-stable.
+    """
+    return hash(
+        tuple(
+            sorted(
+                (
+                    str(o.get("date")),
+                    o.get("market", ""),
+                    float(o.get("price", 0.0)),
+                    o.get("currency", ""),
+                )
+                for o in obs
+            )
+        )
+    )
+
+
+@st.cache_data(ttl=3600)
+def _get_fx_rate_htg_per_usd() -> "float | None":
+    """Latest observable HTG-per-USD implied by FEWS itself.
+
+    `price_observations.common_currency_price` is the USD-converted version of
+    `value` (HTG). The ratio at the most recent date gives us the FX rate
+    FEWS used. None if unavailable.
+    """
+    con = get_connection()
+    row = con.execute(
+        """
+        SELECT value, common_currency_price
+        FROM price_observations
+        WHERE value IS NOT NULL
+          AND common_currency_price IS NOT NULL
+          AND common_currency_price > 0
+        ORDER BY period_date DESC
+        LIMIT 1
+        """
+    ).fetchone()
+    if not row:
+        return None
+    htg, usd = row
+    if not htg or not usd:
+        return None
+    return float(htg) / float(usd)
+
+
+def _convert_price(price: float, src_ccy: str, dst_ccy: str) -> "float | None":
+    """Convert a single price between HTG and USD using the latest FX ratio.
+
+    Returns None if conversion isn't possible (no FX rate cached yet).
+    """
+    if src_ccy == dst_ccy:
+        return float(price)
+    fx = _get_fx_rate_htg_per_usd()
+    if not fx:
+        return None
+    if dst_ccy == "USD":
+        return float(price) / fx
+    return float(price) * fx
+
+
+def _manual_obs_as_df(commodity: str, target_ccy: str) -> pd.DataFrame:
+    """Return manual observations for a commodity as a DataFrame with cols
+    period_date, market, price (converted to target_ccy). Drops entries whose
+    currency can't be converted.
+    """
+    rows = []
+    for o in _manual_obs_for(commodity):
+        price = _convert_price(o["price"], o.get("currency", target_ccy), target_ccy)
+        if price is None:
+            continue
+        rows.append(
+            {
+                "period_date": pd.to_datetime(o["date"]),
+                "market": o.get("market", ALL_MARKETS_LABEL),
+                "price": price,
+            }
+        )
+    if not rows:
+        return pd.DataFrame(columns=["period_date", "market", "price"])
+    return pd.DataFrame(rows).sort_values("period_date").reset_index(drop=True)
+
+
 @st.cache_data(ttl=600)
 def _get_data_freshness() -> dict:
     """Return data-freshness state for the sidebar gate.
@@ -570,6 +672,12 @@ def main():
     # Header
     st.title("🌾 Haiti Food Price Monitor")
 
+    # Session-state for the in-memory "Add a recent price" feature. Keyed by
+    # commodity so per-commodity entries survive commodity switches but a new
+    # browser session starts empty.
+    if "manual_observations" not in st.session_state:
+        st.session_state.manual_observations = {}
+
     # Sidebar controls
     st.sidebar.header("Settings")
     freshness = _get_data_freshness()
@@ -641,6 +749,10 @@ def main():
             traceback.print_exc(file=sys.stderr)
             st.session_state["last_gcs_upload_error"] = str(exc)
         st.session_state.forecast_models = {}
+        # Real data has caught up — drop the user's manual overrides so
+        # they don't double-count alongside the freshly-synced observations.
+        st.session_state.manual_observations = {}
+        st.session_state.pop("manual_obs_hash", None)
         st.cache_data.clear()
         # Reset the date-range widget so it re-initialises against the new
         # (min, max) returned by the freshly-uncached get_date_range(),
@@ -822,6 +934,29 @@ def main():
                     )
                 )
 
+            # Manual user-entered observations ("All markets" only — per-market
+            # entries don't have a place on the country-wide mean chart).
+            manual_df = _manual_obs_as_df(
+                selected_commodity, "USD" if use_usd else "HTG"
+            )
+            manual_all = manual_df[manual_df["market"] == ALL_MARKETS_LABEL]
+            if not manual_all.empty:
+                fig.add_trace(
+                    go.Scatter(
+                        x=manual_all["period_date"],
+                        y=manual_all["price"],
+                        mode="markers",
+                        name="Manual entry",
+                        marker=dict(
+                            color=MANUAL_OBS_MARKER_COLOR,
+                            size=11,
+                            symbol="diamond",
+                            line=dict(color="black", width=1),
+                        ),
+                        hovertemplate=f"Manual<br>Date: %{{x|%Y-%m-%d}}<br>Price: {currency_symbol}%{{y:.2f}}<extra></extra>",
+                    )
+                )
+
             fig.update_layout(
                 xaxis_title="Date",
                 yaxis_title=f"Price ({currency.split()[0]})",
@@ -938,12 +1073,6 @@ def main():
         if "forecast_currency" not in st.session_state:
             st.session_state.forecast_currency = None
 
-        # Check if we need to refresh models
-        need_refresh = (
-            st.session_state.forecast_product != selected_commodity
-            or st.session_state.forecast_currency != currency
-        )
-
         # Controls
         forecast_horizon = st.slider(
             "Forecast Horizon (Months)",
@@ -951,6 +1080,89 @@ def main():
             max_value=12,
             value=8,
             help="Number of months to forecast into the future",
+        )
+
+        # --- "Add a recent price" expander ------------------------------------
+        # Lets the user type in observations FEWS hasn't published yet. Stored
+        # only in st.session_state, never the DB. The Prophet refit below
+        # picks them up automatically via the extra_rows arg.
+        with st.expander("➕ Add a recent price (what-if)"):
+            st.caption(
+                "Add prices you know from the ground. They overlay the chart "
+                "and feed into the forecast refit. Not saved to the database — "
+                "cleared on a new visit or after a successful data sync."
+            )
+            latest_period = freshness.get("latest_period_date")
+            min_entry_date = (
+                (latest_period + timedelta(days=1))
+                if latest_period
+                else (datetime.now().date() - timedelta(days=365))
+            )
+            today_date = datetime.now().date()
+            available_markets = sorted(market_df["market"].unique().tolist()) if not market_df.empty else []
+            input_cols = st.columns([2, 3, 2, 1])
+            with input_cols[0]:
+                entry_date = st.date_input(
+                    "Date",
+                    value=today_date,
+                    min_value=min_entry_date,
+                    max_value=today_date,
+                    key=f"manual_date_{selected_commodity}",
+                )
+            with input_cols[1]:
+                entry_market = st.selectbox(
+                    "Market",
+                    [ALL_MARKETS_LABEL, *available_markets],
+                    key=f"manual_market_{selected_commodity}",
+                )
+            with input_cols[2]:
+                entry_ccy = "USD" if use_usd else "HTG"
+                entry_price = st.number_input(
+                    f"Price ({entry_ccy})",
+                    min_value=0.0,
+                    step=10.0 if entry_ccy == "HTG" else 0.05,
+                    value=0.0,
+                    key=f"manual_price_{selected_commodity}",
+                )
+            with input_cols[3]:
+                st.write("")  # spacer to align button with inputs
+                st.write("")
+                add_clicked = st.button("Add", key=f"manual_add_{selected_commodity}")
+
+            if add_clicked:
+                if entry_price <= 0:
+                    st.warning("Enter a price greater than 0.")
+                else:
+                    st.session_state.manual_observations.setdefault(
+                        selected_commodity, []
+                    ).append(
+                        {
+                            "date": entry_date,
+                            "market": entry_market,
+                            "price": float(entry_price),
+                            "currency": entry_ccy,
+                        }
+                    )
+                    st.rerun()
+
+            current_entries = _manual_obs_for(selected_commodity)
+            if current_entries:
+                display = pd.DataFrame(current_entries)
+                display["date"] = pd.to_datetime(display["date"]).dt.date
+                display = display[["date", "market", "price", "currency"]]
+                display.columns = ["Date", "Market", "Price", "Currency"]
+                st.dataframe(display, use_container_width=True, hide_index=True)
+                if st.button("✕ Clear all", key=f"manual_clear_{selected_commodity}"):
+                    st.session_state.manual_observations.pop(selected_commodity, None)
+                    st.rerun()
+
+        # Check if we need to refresh models. Includes the manual-obs hash so
+        # editing entries automatically triggers a refit on the next render.
+        current_obs_hash = _hash_obs(_manual_obs_for(selected_commodity))
+        need_refresh = (
+            st.session_state.forecast_product != selected_commodity
+            or st.session_state.forecast_currency != currency
+            or st.session_state.get("manual_obs_hash") != current_obs_hash
         )
 
         # Fit models if needed
@@ -962,12 +1174,15 @@ def main():
                     currency="USD" if use_usd else "HTG",
                     min_months=24,
                     conn=get_connection(),
+                    extra_rows=_manual_obs_for(selected_commodity),
+                    fx_rate=_get_fx_rate_htg_per_usd(),
                 )
 
                 st.session_state.forecast_models = results
                 st.session_state.forecast_availability = availability
                 st.session_state.forecast_product = selected_commodity
                 st.session_state.forecast_currency = currency
+                st.session_state.manual_obs_hash = current_obs_hash
         else:
             results = st.session_state.forecast_models
             availability = st.session_state.forecast_availability
@@ -1029,6 +1244,29 @@ def main():
                             hovertemplate=f"Date: %{{x}}<br>Price: {currency_symbol}%{{y:.2f}}<extra></extra>",
                         )
                     )
+
+                    # Manual user-entered observations ("All markets" only on the
+                    # market-average view since they apply country-wide).
+                    manual_df = _manual_obs_as_df(
+                        selected_commodity, "USD" if use_usd else "HTG"
+                    )
+                    manual_all = manual_df[manual_df["market"] == ALL_MARKETS_LABEL]
+                    if not manual_all.empty:
+                        fig.add_trace(
+                            go.Scatter(
+                                x=manual_all["period_date"],
+                                y=manual_all["price"],
+                                mode="markers",
+                                name="Manual entry",
+                                marker=dict(
+                                    color=MANUAL_OBS_MARKER_COLOR,
+                                    size=11,
+                                    symbol="diamond",
+                                    line=dict(color="black", width=1),
+                                ),
+                                hovertemplate=f"Manual<br>Date: %{{x|%Y-%m-%d}}<br>Price: {currency_symbol}%{{y:.2f}}<extra></extra>",
+                            )
+                        )
 
                     # Forecast
                     fig.add_trace(
@@ -1148,6 +1386,11 @@ def main():
                     fig = go.Figure()
                     colors = px.colors.qualitative.Set2
 
+                    # Manual entries pulled once and filtered per market below.
+                    manual_df_for_view = _manual_obs_as_df(
+                        selected_commodity, "USD" if use_usd else "HTG"
+                    )
+
                     for i, market_name in enumerate(selected_forecast_markets):
                         color = colors[i % len(colors)]
 
@@ -1184,6 +1427,34 @@ def main():
                                     hovertemplate=f"{market_name}<br>Date: %{{x}}<br>Price: {currency_symbol}%{{y:.2f}}<extra></extra>",
                                 )
                             )
+
+                        # Per-market manual entries (this market or "All markets"
+                        # which broadcasts). Markers match this market's color so
+                        # the user can tell whose point it is.
+                        if not manual_df_for_view.empty:
+                            mkt_manual = manual_df_for_view[
+                                manual_df_for_view["market"].isin(
+                                    [market_name, ALL_MARKETS_LABEL]
+                                )
+                            ]
+                            if not mkt_manual.empty:
+                                fig.add_trace(
+                                    go.Scatter(
+                                        x=mkt_manual["period_date"],
+                                        y=mkt_manual["price"],
+                                        mode="markers",
+                                        name=f"{market_name} (Manual)",
+                                        marker=dict(
+                                            color=color,
+                                            size=11,
+                                            symbol="diamond",
+                                            line=dict(color="black", width=1),
+                                        ),
+                                        legendgroup=market_name,
+                                        showlegend=False,
+                                        hovertemplate=f"{market_name} Manual<br>Date: %{{x|%Y-%m-%d}}<br>Price: {currency_symbol}%{{y:.2f}}<extra></extra>",
+                                    )
+                                )
 
                         if market_name in forecasts:
                             forecast_df = forecasts[market_name]

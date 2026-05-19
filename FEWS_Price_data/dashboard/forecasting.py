@@ -88,6 +88,80 @@ def get_price_data(
     return df
 
 
+def _splice_manual(
+    df: pd.DataFrame,
+    extra_rows: List[dict],
+    currency: str,
+    fx_rate: Optional[float] = None,
+) -> pd.DataFrame:
+    """Append in-memory user observations into a get_price_data DF.
+
+    Each entry in `extra_rows` is a dict with keys:
+        date    -- date-like (str / date / Timestamp)
+        market  -- specific market name or the string "All markets"
+        price   -- float in entry currency
+        currency -- "HTG" or "USD" (the currency the user typed in)
+
+    "All markets" broadcasts a single price to every market present in `df`,
+    so it influences both per-market fits and the market-average. Entries in
+    a currency that doesn't match the active forecast currency are converted
+    using `fx_rate` (HTG per USD); if conversion is impossible the entry is
+    dropped with a warning. On (market_name, date) conflict the manual row
+    wins so the user override is what Prophet actually fits.
+    """
+    if not extra_rows or df.empty:
+        return df
+
+    existing_markets = df["market_name"].unique().tolist()
+    if not existing_markets:
+        return df
+    market_id_by_name = dict(df[["market_name", "market"]].drop_duplicates().values)
+
+    rows = []
+    for obs in extra_rows:
+        price = obs.get("price")
+        if price is None:
+            continue
+        entry_ccy = obs.get("currency", currency)
+        if entry_ccy != currency:
+            if not fx_rate or fx_rate <= 0:
+                # Can't convert -- skip rather than poison the fit.
+                continue
+            # fx_rate is HTG per USD.
+            if currency == "USD":
+                price = price / fx_rate
+            else:
+                price = price * fx_rate
+
+        target_markets = (
+            existing_markets
+            if obs.get("market") == "All markets"
+            else [obs.get("market")]
+        )
+        date = pd.to_datetime(obs["date"])
+        for m in target_markets:
+            if m not in market_id_by_name:
+                continue
+            rows.append(
+                {
+                    "date": date,
+                    "market": market_id_by_name[m],
+                    "market_name": m,
+                    "price": float(price),
+                }
+            )
+
+    if not rows:
+        return df
+
+    extra_df = pd.DataFrame(rows)
+    combined = pd.concat([df, extra_df], ignore_index=True)
+    # Manual entries are appended last so keep="last" makes them override.
+    combined = combined.drop_duplicates(subset=["market_name", "date"], keep="last")
+    combined = combined.sort_values(["market_name", "date"]).reset_index(drop=True)
+    return combined
+
+
 def check_data_availability(df: pd.DataFrame, min_months: int = 24) -> Dict[str, Dict]:
     """
     Check which markets have sufficient data for forecasting.
@@ -263,6 +337,8 @@ def fit_market_average_model(
 def fit_all_models(
     db_path: str, product_name: str, currency: str = "HTG", min_months: int = 24,
     conn: Optional["duckdb.DuckDBPyConnection"] = None,
+    extra_rows: Optional[List[dict]] = None,
+    fx_rate: Optional[float] = None,
 ) -> Tuple[Dict[str, ForecastResult], Dict[str, Dict]]:
     """
     Fit Prophet models for all markets with sufficient data, plus market average.
@@ -272,12 +348,21 @@ def fit_all_models(
         product_name: Name of the product/commodity
         currency: Currency for prices ('HTG' or 'USD')
         min_months: Minimum months of data required
+        extra_rows: Optional in-memory observations to splice into training
+            data (see `_splice_manual` for the expected schema). Used by the
+            dashboard's "Add a recent price" feature so what-if values feed
+            the fit without touching the DB.
+        fx_rate: HTG per USD, used only to convert `extra_rows` entries whose
+            currency differs from `currency`.
 
     Returns:
         Tuple of (results_dict, availability_dict)
     """
     # Get price data
     df = get_price_data(db_path, product_name, currency, conn=conn)
+
+    if extra_rows:
+        df = _splice_manual(df, extra_rows, currency, fx_rate=fx_rate)
 
     if len(df) == 0:
         return {}, {}
