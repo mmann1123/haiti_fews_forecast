@@ -1092,13 +1092,11 @@ def main():
                 "and feed into the forecast refit. Not saved to the database — "
                 "cleared on a new visit or after a successful data sync."
             )
-            latest_period = freshness.get("latest_period_date")
-            min_entry_date = (
-                (latest_period + timedelta(days=1))
-                if latest_period
-                else (datetime.now().date() - timedelta(days=365))
-            )
+            # Allow corrections to the last 12 months as well as future months.
+            # Splice keeps the manual row on (market, date) conflict, so
+            # entering a date that already exists in the DB acts as an override.
             today_date = datetime.now().date()
+            min_entry_date = today_date - timedelta(days=365)
             available_markets = sorted(market_df["market"].unique().tolist()) if not market_df.empty else []
             input_cols = st.columns([2, 3, 2, 1])
             with input_cols[0]:
