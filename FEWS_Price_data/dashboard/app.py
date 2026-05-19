@@ -222,6 +222,8 @@ def _push_db_to_gcs() -> None:
 
     upload_db_to_gcs(DB_PATH, GCS_BUCKET, GCS_BLOB_NAME)
     st.session_state["last_gcs_upload_at"] = datetime.now(timezone.utc)
+    # Successful upload clears any prior error banner.
+    st.session_state.pop("last_gcs_upload_error", None)
 
 
 _bootstrap_db_from_gcs()
@@ -249,7 +251,7 @@ if _db_needs_init():
             flush=True,
         )
         traceback.print_exc(file=sys.stderr)
-        st.warning(f"Could not upload seeded DB to GCS: {exc}")
+        st.session_state["last_gcs_upload_error"] = str(exc)
     st.cache_data.clear()
 
 
@@ -528,22 +530,24 @@ def _refresh_is_futile(freshness: dict) -> tuple[bool, str]:
 
 
 def _render_sidebar_status(freshness: dict) -> None:
-    """Persistent GCS + freshness banner at the top of the sidebar."""
-    if GCS_BUCKET:
-        last_upload = st.session_state.get("last_gcs_upload_at")
-        upload_note = (
-            f"  \nLast upload: {last_upload.strftime('%Y-%m-%d %H:%M UTC')}"
-            if last_upload
-            else ""
-        )
-        st.sidebar.success(
-            f"GCS persistence ON  \n`gs://{GCS_BUCKET}/{GCS_BLOB_NAME}`{upload_note}"
-        )
-    else:
+    """Sidebar banner: only render when something is wrong.
+
+    - No GCS bucket configured → red error (updates will be lost).
+    - A GCS upload failed in this session → red error with the message.
+    - Otherwise: render nothing.
+    """
+    if not GCS_BUCKET:
         st.sidebar.error(
             "GCS persistence is OFF — updates will be lost on container "
             "restart. Set the `GCS_BUCKET` env var on the Cloud Run service."
         )
+    else:
+        upload_err = st.session_state.get("last_gcs_upload_error")
+        if upload_err:
+            st.sidebar.error(
+                f"GCS upload failed: {upload_err}  \n"
+                f"Updates are saved locally but will be lost on container restart."
+            )
 
     latest = freshness.get("latest_period_date")
     last_import = freshness.get("last_import_at")
@@ -635,7 +639,7 @@ def main():
                 flush=True,
             )
             traceback.print_exc(file=sys.stderr)
-            st.sidebar.warning(f"Sync saved locally but GCS upload failed: {exc}")
+            st.session_state["last_gcs_upload_error"] = str(exc)
         st.session_state.forecast_models = {}
         st.cache_data.clear()
         # Reset the date-range widget so it re-initialises against the new
