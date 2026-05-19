@@ -1,0 +1,601 @@
+"fews_commodity","product_source","usda_slug","basis","lag","r","n","p"
+"Beans (Black)","Local","beans_dry_edible","levels",-6,0.190451929835785,73,0.10653900989747
+"Beans (Black)","Local","beans_dry_edible","levels",-3,0.278668838569488,73,0.0169702276241183
+"Beans (Black)","Local","beans_dry_edible","levels",0,0.275882567806837,73,0.0181518767881488
+"Beans (Black)","Local","beans_dry_edible","levels",1,0.292620963861128,72,0.0126179118674194
+"Beans (Black)","Local","beans_dry_edible","levels",3,0.396367991555761,70,0.000681747633647768
+"Beans (Black)","Local","beans_dry_edible","levels",6,0.490740232686505,67,2.48627783147659e-05
+"Beans (Black)","Local","beans_dry_edible","levels",9,0.562311303731347,64,1.32831764726948e-06
+"Beans (Black)","Local","beans_dry_edible","levels",12,0.524632405599426,61,1.42382433237897e-05
+"Beans (Black)","Local","beans_dry_edible","levels",15,0.44822393218488,58,0.000418022058506625
+"Beans (Black)","Local","beans_dry_edible","levels",18,0.484178851961833,55,0.000180097460765879
+"Beans (Black)","Local","beans_dry_edible","returns",-6,0.0740806746555059,70,0.542205150305001
+"Beans (Black)","Local","beans_dry_edible","returns",-3,0.204340224954076,70,0.0897336195853572
+"Beans (Black)","Local","beans_dry_edible","returns",0,-0.0282380820336659,70,0.816499935682999
+"Beans (Black)","Local","beans_dry_edible","returns",1,0.0489101174774989,69,0.689823413708947
+"Beans (Black)","Local","beans_dry_edible","returns",3,0.0999210184272557,67,0.421100622853162
+"Beans (Black)","Local","beans_dry_edible","returns",6,0.153358832903878,64,0.226331732580986
+"Beans (Black)","Local","beans_dry_edible","returns",9,0.0458532826917104,61,0.725662321632867
+"Beans (Black)","Local","beans_dry_edible","returns",12,0.153699368487281,58,0.249354535733514
+"Beans (Black)","Local","beans_dry_edible","returns",15,-0.158681027947749,55,0.247219562455747
+"Beans (Black)","Local","beans_dry_edible","returns",18,-0.153966507027245,52,0.275804444373337
+"Beans (Black)","Local","beans_dry_edible","levels_des",-6,0.150051371788056,73,0.205119693252043
+"Beans (Black)","Local","beans_dry_edible","levels_des",-3,0.255704746894572,73,0.0290009605977642
+"Beans (Black)","Local","beans_dry_edible","levels_des",0,0.244482803968579,73,0.0371096232424714
+"Beans (Black)","Local","beans_dry_edible","levels_des",1,0.284863420745553,72,0.0152948076838977
+"Beans (Black)","Local","beans_dry_edible","levels_des",3,0.403727542182194,70,0.000528682918082117
+"Beans (Black)","Local","beans_dry_edible","levels_des",6,0.489938613885551,67,2.57510550243841e-05
+"Beans (Black)","Local","beans_dry_edible","levels_des",9,0.568535514763412,64,9.54176556387686e-07
+"Beans (Black)","Local","beans_dry_edible","levels_des",12,0.55427424840631,61,3.57839191717722e-06
+"Beans (Black)","Local","beans_dry_edible","levels_des",15,0.545166110293023,58,9.64560583921887e-06
+"Beans (Black)","Local","beans_dry_edible","levels_des",18,0.553816884490742,55,1.15405291311109e-05
+"Beans (Black)","Local","beans_dry_edible","returns_des",-6,-0.00117887116583501,70,0.992272169091538
+"Beans (Black)","Local","beans_dry_edible","returns_des",-3,0.229608019675238,70,0.0558659645005326
+"Beans (Black)","Local","beans_dry_edible","returns_des",0,-0.120110348969423,70,0.321972603977665
+"Beans (Black)","Local","beans_dry_edible","returns_des",1,0.0813473627448375,69,0.506383252830543
+"Beans (Black)","Local","beans_dry_edible","returns_des",3,0.103817414579902,67,0.403125301572093
+"Beans (Black)","Local","beans_dry_edible","returns_des",6,0.106774120260617,64,0.401041908176455
+"Beans (Black)","Local","beans_dry_edible","returns_des",9,-0.00353411459797004,61,0.97843472385774
+"Beans (Black)","Local","beans_dry_edible","returns_des",12,0.142624677231734,58,0.285509854579678
+"Beans (Black)","Local","beans_dry_edible","returns_des",15,-0.155757724974478,55,0.256146992122654
+"Beans (Black)","Local","beans_dry_edible","returns_des",18,-0.197345646442185,52,0.160819660833945
+"Beans (Red)","Local","beans_dry_edible","levels",-6,0.0965268825996079,69,0.430106603782521
+"Beans (Red)","Local","beans_dry_edible","levels",-3,0.086286808208334,69,0.48082623955952
+"Beans (Red)","Local","beans_dry_edible","levels",0,0.0348780576301707,69,0.776017551178372
+"Beans (Red)","Local","beans_dry_edible","levels",1,0.0228164681141956,68,0.853475986221559
+"Beans (Red)","Local","beans_dry_edible","levels",3,0.0560490665399727,66,0.654877710311821
+"Beans (Red)","Local","beans_dry_edible","levels",6,0.0706725556576614,63,0.582043626342318
+"Beans (Red)","Local","beans_dry_edible","levels",9,0.177234602589456,61,0.17179619174645
+"Beans (Red)","Local","beans_dry_edible","levels",12,0.293218733963061,61,0.0218252007713351
+"Beans (Red)","Local","beans_dry_edible","levels",15,0.340092128339366,58,0.00900022751213638
+"Beans (Red)","Local","beans_dry_edible","levels",18,0.505437379840159,55,8.28674392794634e-05
+"Beans (Red)","Local","beans_dry_edible","returns",-6,0.0548097907636544,64,0.667079348397876
+"Beans (Red)","Local","beans_dry_edible","returns",-3,0.03048354493044,64,0.811014511164609
+"Beans (Red)","Local","beans_dry_edible","returns",0,-0.0754241976703104,64,0.553618977899138
+"Beans (Red)","Local","beans_dry_edible","returns",1,-0.1772870069636,63,0.164519080317298
+"Beans (Red)","Local","beans_dry_edible","returns",3,0.0847276002971326,61,0.516194486632923
+"Beans (Red)","Local","beans_dry_edible","returns",6,0.0108119305031651,59,0.935224489986263
+"Beans (Red)","Local","beans_dry_edible","returns",9,0.14686375132474,58,0.271283641813175
+"Beans (Red)","Local","beans_dry_edible","returns",12,0.129230652316989,58,0.33362963513276
+"Beans (Red)","Local","beans_dry_edible","returns",15,-0.210091138245691,55,0.123675263485036
+"Beans (Red)","Local","beans_dry_edible","returns",18,-0.257167475604771,52,0.0656991991938966
+"Beans (Red)","Local","beans_dry_edible","levels_des",-6,0.0728580014093536,69,0.551884139320325
+"Beans (Red)","Local","beans_dry_edible","levels_des",-3,0.0779001570502241,69,0.524624114953789
+"Beans (Red)","Local","beans_dry_edible","levels_des",0,0.00959319550153034,69,0.937642672806872
+"Beans (Red)","Local","beans_dry_edible","levels_des",1,-0.00324895828261475,68,0.97902208723205
+"Beans (Red)","Local","beans_dry_edible","levels_des",3,0.0276647167566083,66,0.825483963360638
+"Beans (Red)","Local","beans_dry_edible","levels_des",6,0.0150162116098382,63,0.907012755777736
+"Beans (Red)","Local","beans_dry_edible","levels_des",9,0.189191084960039,61,0.144211779161429
+"Beans (Red)","Local","beans_dry_edible","levels_des",12,0.32916026748893,61,0.00959040774810942
+"Beans (Red)","Local","beans_dry_edible","levels_des",15,0.409399009050092,58,0.00141713780987752
+"Beans (Red)","Local","beans_dry_edible","levels_des",18,0.544586904225866,55,1.72132863724402e-05
+"Beans (Red)","Local","beans_dry_edible","returns_des",-6,0.0577430507015948,64,0.650391534774164
+"Beans (Red)","Local","beans_dry_edible","returns_des",-3,-0.0100897904787687,64,0.936929687832343
+"Beans (Red)","Local","beans_dry_edible","returns_des",0,-0.166997315143144,64,0.187192177398417
+"Beans (Red)","Local","beans_dry_edible","returns_des",1,-0.0755233053658191,63,0.556341078490774
+"Beans (Red)","Local","beans_dry_edible","returns_des",3,0.128330914628739,61,0.324307715733265
+"Beans (Red)","Local","beans_dry_edible","returns_des",6,0.00320155092189041,59,0.980800390460951
+"Beans (Red)","Local","beans_dry_edible","returns_des",9,0.144109345492914,58,0.280472561620967
+"Beans (Red)","Local","beans_dry_edible","returns_des",12,0.119149411640307,58,0.373014577239356
+"Beans (Red)","Local","beans_dry_edible","returns_des",15,-0.182209459890181,55,0.183044080816156
+"Beans (Red)","Local","beans_dry_edible","returns_des",18,-0.265272371742926,52,0.0573529732332225
+"Beans (Lima)","Local","beans_dry_edible","levels",-6,0.20311352799007,71,0.0893484648592264
+"Beans (Lima)","Local","beans_dry_edible","levels",-3,0.211388598142176,71,0.0767883549296215
+"Beans (Lima)","Local","beans_dry_edible","levels",0,0.133505298296578,71,0.267022513669728
+"Beans (Lima)","Local","beans_dry_edible","levels",1,0.128725478308832,70,0.288222676635849
+"Beans (Lima)","Local","beans_dry_edible","levels",3,0.185397256798941,68,0.130118055506718
+"Beans (Lima)","Local","beans_dry_edible","levels",6,0.270311365153674,65,0.0294245821447399
+"Beans (Lima)","Local","beans_dry_edible","levels",9,0.393391472536178,62,0.00156088544691711
+"Beans (Lima)","Local","beans_dry_edible","levels",12,0.330664422854246,59,0.0105296100752967
+"Beans (Lima)","Local","beans_dry_edible","levels",15,0.310255872182219,56,0.0199585929144969
+"Beans (Lima)","Local","beans_dry_edible","levels",18,0.404375580320381,53,0.00267237883075812
+"Beans (Lima)","Local","beans_dry_edible","returns",-6,0.0378613920444014,68,0.759197650248227
+"Beans (Lima)","Local","beans_dry_edible","returns",-3,0.0968547212691644,68,0.432027535872469
+"Beans (Lima)","Local","beans_dry_edible","returns",0,-0.0249932666081038,68,0.839674173866537
+"Beans (Lima)","Local","beans_dry_edible","returns",1,-0.0517148674934235,67,0.677690589041179
+"Beans (Lima)","Local","beans_dry_edible","returns",3,0.106516379450615,65,0.398386738186978
+"Beans (Lima)","Local","beans_dry_edible","returns",6,0.0725923093154664,62,0.575001703865471
+"Beans (Lima)","Local","beans_dry_edible","returns",9,0.0564096925545964,59,0.671304375436851
+"Beans (Lima)","Local","beans_dry_edible","returns",12,0.179951717933217,56,0.184466947404737
+"Beans (Lima)","Local","beans_dry_edible","returns",15,-0.105857519166503,53,0.450608283782262
+"Beans (Lima)","Local","beans_dry_edible","returns",18,-0.272814424647227,50,0.0552592056409372
+"Beans (Lima)","Local","beans_dry_edible","levels_des",-6,0.196565460555932,71,0.100390659104973
+"Beans (Lima)","Local","beans_dry_edible","levels_des",-3,0.183066127377218,71,0.126485705955047
+"Beans (Lima)","Local","beans_dry_edible","levels_des",0,0.0843556264662226,71,0.484286657011065
+"Beans (Lima)","Local","beans_dry_edible","levels_des",1,0.0856482040419287,70,0.480823497411629
+"Beans (Lima)","Local","beans_dry_edible","levels_des",3,0.148381486897424,68,0.227201842545585
+"Beans (Lima)","Local","beans_dry_edible","levels_des",6,0.252171968040514,65,0.0427130094795621
+"Beans (Lima)","Local","beans_dry_edible","levels_des",9,0.380227996997252,62,0.00230086350228577
+"Beans (Lima)","Local","beans_dry_edible","levels_des",12,0.333108820387397,59,0.00993748839366083
+"Beans (Lima)","Local","beans_dry_edible","levels_des",15,0.375935306818581,56,0.004299034071123
+"Beans (Lima)","Local","beans_dry_edible","levels_des",18,0.531921702978914,53,4.14991623253711e-05
+"Beans (Lima)","Local","beans_dry_edible","returns_des",-6,0.0150558994420457,68,0.90301052759782
+"Beans (Lima)","Local","beans_dry_edible","returns_des",-3,0.114353238765914,68,0.353122846772895
+"Beans (Lima)","Local","beans_dry_edible","returns_des",0,-0.102771330015718,68,0.404295921325902
+"Beans (Lima)","Local","beans_dry_edible","returns_des",1,-0.0166850143590266,67,0.893393196374208
+"Beans (Lima)","Local","beans_dry_edible","returns_des",3,0.0793150958732355,65,0.529976562501651
+"Beans (Lima)","Local","beans_dry_edible","returns_des",6,0.0918697737453796,62,0.477601390520129
+"Beans (Lima)","Local","beans_dry_edible","returns_des",9,0.0571951446932528,59,0.666994198290707
+"Beans (Lima)","Local","beans_dry_edible","returns_des",12,0.16754975153859,56,0.217092735492175
+"Beans (Lima)","Local","beans_dry_edible","returns_des",15,-0.148929426161099,53,0.287184474759543
+"Beans (Lima)","Local","beans_dry_edible","returns_des",18,-0.237086531692342,50,0.0973613290273759
+"Beans (Pinto)","Import","beans_dry_edible","levels",-6,0.185391095396743,73,0.116347876780088
+"Beans (Pinto)","Import","beans_dry_edible","levels",-3,0.191557585956964,73,0.104483999171495
+"Beans (Pinto)","Import","beans_dry_edible","levels",0,0.153493663182153,73,0.194798646350639
+"Beans (Pinto)","Import","beans_dry_edible","levels",1,0.151454513288469,72,0.204090682681733
+"Beans (Pinto)","Import","beans_dry_edible","levels",3,0.261462936675086,70,0.0287897451601665
+"Beans (Pinto)","Import","beans_dry_edible","levels",6,0.387420809497489,67,0.00119951716544437
+"Beans (Pinto)","Import","beans_dry_edible","levels",9,0.442715488833882,64,0.000249116298954335
+"Beans (Pinto)","Import","beans_dry_edible","levels",12,0.29210380122276,61,0.0223554468054263
+"Beans (Pinto)","Import","beans_dry_edible","levels",15,0.279946905079907,58,0.0333073257934053
+"Beans (Pinto)","Import","beans_dry_edible","levels",18,0.368940581302239,55,0.00557452510687105
+"Beans (Pinto)","Import","beans_dry_edible","returns",-6,-0.0644083820222374,70,0.596301333353535
+"Beans (Pinto)","Import","beans_dry_edible","returns",-3,0.138799414706912,70,0.25182555403543
+"Beans (Pinto)","Import","beans_dry_edible","returns",0,0.0550244215565816,70,0.650965629616755
+"Beans (Pinto)","Import","beans_dry_edible","returns",1,-0.0693433463904072,69,0.571279388225975
+"Beans (Pinto)","Import","beans_dry_edible","returns",3,0.08246577063959,67,0.507048917837593
+"Beans (Pinto)","Import","beans_dry_edible","returns",6,0.0889543247915873,64,0.484554275078094
+"Beans (Pinto)","Import","beans_dry_edible","returns",9,0.120819227340487,61,0.35366158573514
+"Beans (Pinto)","Import","beans_dry_edible","returns",12,0.147185931894919,58,0.270222084832556
+"Beans (Pinto)","Import","beans_dry_edible","returns",15,-0.154912015773715,55,0.258769749730151
+"Beans (Pinto)","Import","beans_dry_edible","returns",18,-0.34930524713158,52,0.0111439814322687
+"Beans (Pinto)","Import","beans_dry_edible","levels_des",-6,0.145847905082109,73,0.21824315555485
+"Beans (Pinto)","Import","beans_dry_edible","levels_des",-3,0.186495383829932,73,0.11415044094776
+"Beans (Pinto)","Import","beans_dry_edible","levels_des",0,0.141269662216097,73,0.233196340661183
+"Beans (Pinto)","Import","beans_dry_edible","levels_des",1,0.156595821814764,72,0.188972330614746
+"Beans (Pinto)","Import","beans_dry_edible","levels_des",3,0.238077450951701,70,0.0471811190437946
+"Beans (Pinto)","Import","beans_dry_edible","levels_des",6,0.326922730206973,67,0.00692871977644528
+"Beans (Pinto)","Import","beans_dry_edible","levels_des",9,0.436399481456841,64,0.00031225877422981
+"Beans (Pinto)","Import","beans_dry_edible","levels_des",12,0.347334974512757,61,0.00609539769426298
+"Beans (Pinto)","Import","beans_dry_edible","levels_des",15,0.31466012504189,58,0.0161429050693207
+"Beans (Pinto)","Import","beans_dry_edible","levels_des",18,0.386346420243867,55,0.00357447406684719
+"Beans (Pinto)","Import","beans_dry_edible","returns_des",-6,-0.126396696748951,70,0.297106616146372
+"Beans (Pinto)","Import","beans_dry_edible","returns_des",-3,0.118461736550402,70,0.328707379700499
+"Beans (Pinto)","Import","beans_dry_edible","returns_des",0,0.00496161783170673,70,0.967483512828135
+"Beans (Pinto)","Import","beans_dry_edible","returns_des",1,0.0398190372791848,69,0.745296115655155
+"Beans (Pinto)","Import","beans_dry_edible","returns_des",3,0.0719872671713006,67,0.562653850927793
+"Beans (Pinto)","Import","beans_dry_edible","returns_des",6,0.0645033214982696,64,0.612587124882458
+"Beans (Pinto)","Import","beans_dry_edible","returns_des",9,0.0662334116285896,61,0.612045961819852
+"Beans (Pinto)","Import","beans_dry_edible","returns_des",12,0.149098189541096,58,0.263978442100574
+"Beans (Pinto)","Import","beans_dry_edible","returns_des",15,-0.176093468376815,55,0.198434504869606
+"Beans (Pinto)","Import","beans_dry_edible","returns_des",18,-0.405581939429179,52,0.00285485081058285
+"Maize Grain (Yellow)","Local","corn","levels",-6,0.557126489632076,144,4.10647737607107e-13
+"Maize Grain (Yellow)","Local","corn","levels",-3,0.619877652486165,147,5.69501578636997e-17
+"Maize Grain (Yellow)","Local","corn","levels",0,0.608710958211713,150,1.41604873205477e-16
+"Maize Grain (Yellow)","Local","corn","levels",1,0.595949690374071,150,8.6178851783628e-16
+"Maize Grain (Yellow)","Local","corn","levels",3,0.566131460127407,150,4.35523899912449e-14
+"Maize Grain (Yellow)","Local","corn","levels",6,0.559498128981195,150,9.88896633358562e-14
+"Maize Grain (Yellow)","Local","corn","levels",9,0.574540662433402,150,1.49950058483867e-14
+"Maize Grain (Yellow)","Local","corn","levels",12,0.536887140724908,150,1.41789764861783e-12
+"Maize Grain (Yellow)","Local","corn","levels",15,0.46838099109234,150,1.5004487838831e-09
+"Maize Grain (Yellow)","Local","corn","levels",18,0.399396733023202,150,4.127303209e-07
+"Maize Grain (Yellow)","Local","corn","returns",-6,-0.179107425903889,140,0.0342275391726013
+"Maize Grain (Yellow)","Local","corn","returns",-3,0.120308221798216,143,0.152357306696207
+"Maize Grain (Yellow)","Local","corn","returns",0,0.177367514937584,146,0.0322152450981185
+"Maize Grain (Yellow)","Local","corn","returns",1,0.160710845558755,146,0.052647603666434
+"Maize Grain (Yellow)","Local","corn","returns",3,-0.0990859573269385,146,0.234085804852297
+"Maize Grain (Yellow)","Local","corn","returns",6,-0.210797657261834,146,0.0106508825441455
+"Maize Grain (Yellow)","Local","corn","returns",9,0.191738524770816,146,0.0204262195322776
+"Maize Grain (Yellow)","Local","corn","returns",12,0.091323640795639,146,0.272958257958848
+"Maize Grain (Yellow)","Local","corn","returns",15,0.085742782542829,146,0.303467870131744
+"Maize Grain (Yellow)","Local","corn","returns",18,-0.12739584174134,146,0.125436322850672
+"Maize Grain (Yellow)","Local","corn","levels_des",-6,0.588795223980257,144,8.38508008126161e-15
+"Maize Grain (Yellow)","Local","corn","levels_des",-3,0.617300789460087,147,8.31461648032373e-17
+"Maize Grain (Yellow)","Local","corn","levels_des",0,0.597897040892789,150,6.57596000641031e-16
+"Maize Grain (Yellow)","Local","corn","levels_des",1,0.59506305036844,150,9.74115150691179e-16
+"Maize Grain (Yellow)","Local","corn","levels_des",3,0.58495663554988,150,3.83490806763031e-15
+"Maize Grain (Yellow)","Local","corn","levels_des",6,0.578762927964244,150,8.67805389093814e-15
+"Maize Grain (Yellow)","Local","corn","levels_des",9,0.569203195250144,150,2.96062938188177e-14
+"Maize Grain (Yellow)","Local","corn","levels_des",12,0.52719891502047,150,4.18174291092095e-12
+"Maize Grain (Yellow)","Local","corn","levels_des",15,0.483778365319888,150,3.57769482543875e-10
+"Maize Grain (Yellow)","Local","corn","levels_des",18,0.416132640856685,150,1.18278848745713e-07
+"Maize Grain (Yellow)","Local","corn","returns_des",-6,0.0142405803209933,140,0.867374274287421
+"Maize Grain (Yellow)","Local","corn","returns_des",-3,0.0919506418442325,143,0.274729831457025
+"Maize Grain (Yellow)","Local","corn","returns_des",0,0.0366629698158131,146,0.660414994968688
+"Maize Grain (Yellow)","Local","corn","returns_des",1,0.0885515826763334,146,0.287843012142101
+"Maize Grain (Yellow)","Local","corn","returns_des",3,-0.0303704500229036,146,0.715934761167919
+"Maize Grain (Yellow)","Local","corn","returns_des",6,-0.0341616913561916,146,0.682283739102666
+"Maize Grain (Yellow)","Local","corn","returns_des",9,0.136338300051691,146,0.100819587349375
+"Maize Grain (Yellow)","Local","corn","returns_des",12,-0.0612709010940529,146,0.462542860101398
+"Maize Grain (Yellow)","Local","corn","returns_des",15,0.141912596330079,146,0.0875146754564503
+"Maize Grain (Yellow)","Local","corn","returns_des",18,0.0308269634944219,146,0.711852161420358
+"Maize Meal","Local","corn","levels",-6,0.418700413099471,151,8.78519747648559e-08
+"Maize Meal","Local","corn","levels",-3,0.500902935751261,151,5.75060340774283e-11
+"Maize Meal","Local","corn","levels",0,0.498008116253075,151,7.70486042922173e-11
+"Maize Meal","Local","corn","levels",1,0.484036572790523,151,3.04458442847029e-10
+"Maize Meal","Local","corn","levels",3,0.448710903051086,151,7.54754366944801e-09
+"Maize Meal","Local","corn","levels",6,0.428204089951595,151,4.14295816247886e-08
+"Maize Meal","Local","corn","levels",9,0.41047093857801,151,1.6534965203562e-07
+"Maize Meal","Local","corn","levels",12,0.355109444611952,151,7.67347778600511e-06
+"Maize Meal","Local","corn","levels",15,0.282245031899229,151,0.000446209460276082
+"Maize Meal","Local","corn","levels",18,0.226470982601333,151,0.00517038421826593
+"Maize Meal","Local","corn","returns",-6,-0.153799643772431,144,0.0656982657807727
+"Maize Meal","Local","corn","returns",-3,0.254861740451228,144,0.00205091438237414
+"Maize Meal","Local","corn","returns",0,0.106373493868185,144,0.204455151774554
+"Maize Meal","Local","corn","returns",1,0.137278884156055,144,0.100845795669852
+"Maize Meal","Local","corn","returns",3,0.0106100696788583,144,0.899561951920358
+"Maize Meal","Local","corn","returns",6,-0.216702380426951,144,0.00908494453017296
+"Maize Meal","Local","corn","returns",9,0.189753060086303,144,0.0227308703785577
+"Maize Meal","Local","corn","returns",12,0.0163659200152842,144,0.84563372610991
+"Maize Meal","Local","corn","returns",15,0.127945287402005,144,0.1264503794422
+"Maize Meal","Local","corn","returns",18,-0.0467675485346626,144,0.577784280263013
+"Maize Meal","Local","corn","levels_des",-6,0.435034962853398,151,2.37901301683614e-08
+"Maize Meal","Local","corn","levels_des",-3,0.490643764560216,151,1.6020286715136e-10
+"Maize Meal","Local","corn","levels_des",0,0.498857419457797,151,7.07314893724794e-11
+"Maize Meal","Local","corn","levels_des",1,0.494253983185984,151,1.12142178503595e-10
+"Maize Meal","Local","corn","levels_des",3,0.47394347168592,151,7.91052827702151e-10
+"Maize Meal","Local","corn","levels_des",6,0.446747173789518,151,8.92806276258998e-09
+"Maize Meal","Local","corn","levels_des",9,0.402562072023116,151,2.98887325464447e-07
+"Maize Meal","Local","corn","levels_des",12,0.353610244512289,151,8.43303048289635e-06
+"Maize Meal","Local","corn","levels_des",15,0.298555400800972,151,0.000196470536571793
+"Maize Meal","Local","corn","levels_des",18,0.239561528313796,151,0.00305069813545555
+"Maize Meal","Local","corn","returns_des",-6,0.0314853095074716,144,0.707940323273094
+"Maize Meal","Local","corn","returns_des",-3,0.12381453671936,144,0.139268497615153
+"Maize Meal","Local","corn","returns_des",0,0.0973058496677054,144,0.245947408735749
+"Maize Meal","Local","corn","returns_des",1,0.19733431766317,144,0.0177527761568037
+"Maize Meal","Local","corn","returns_des",3,0.0369711186802567,144,0.659982549328003
+"Maize Meal","Local","corn","returns_des",6,-0.114812046697291,144,0.170601794137854
+"Maize Meal","Local","corn","returns_des",9,0.109576720445171,144,0.191076504295292
+"Maize Meal","Local","corn","returns_des",12,-0.00594318480721471,144,0.94363869307055
+"Maize Meal","Local","corn","returns_des",15,0.169339225988382,144,0.0424543670327486
+"Maize Meal","Local","corn","returns_des",18,0.0780886793796119,144,0.352206046053542
+"Maize Meal (Gradoro)","Import","corn","levels",-6,0.0604106579522261,59,0.649461591971896
+"Maize Meal (Gradoro)","Import","corn","levels",-3,0.182189514224115,59,0.167256889485456
+"Maize Meal (Gradoro)","Import","corn","levels",0,0.303467923325321,59,0.0194650900150202
+"Maize Meal (Gradoro)","Import","corn","levels",1,0.355604949460791,59,0.00571003927520777
+"Maize Meal (Gradoro)","Import","corn","levels",3,0.497767831264672,59,6.03859447751307e-05
+"Maize Meal (Gradoro)","Import","corn","levels",6,0.612618755478049,59,2.51187151808957e-07
+"Maize Meal (Gradoro)","Import","corn","levels",9,0.581535497702448,59,1.36502260645906e-06
+"Maize Meal (Gradoro)","Import","corn","levels",12,0.588819685703796,59,9.32667314061357e-07
+"Maize Meal (Gradoro)","Import","corn","levels",15,0.605420101257649,59,3.77778121774606e-07
+"Maize Meal (Gradoro)","Import","corn","levels",18,0.441296394501698,59,0.000467771484976791
+"Maize Meal (Gradoro)","Import","corn","returns",-6,-0.189823141299488,54,0.169191320054304
+"Maize Meal (Gradoro)","Import","corn","returns",-3,0.0920559793027858,54,0.507939271260993
+"Maize Meal (Gradoro)","Import","corn","returns",0,-0.136572293133041,54,0.324752683100162
+"Maize Meal (Gradoro)","Import","corn","returns",1,-0.0393550121014488,54,0.777528234279907
+"Maize Meal (Gradoro)","Import","corn","returns",3,0.141439010279478,54,0.307642946619005
+"Maize Meal (Gradoro)","Import","corn","returns",6,0.169921976399272,54,0.219294709594279
+"Maize Meal (Gradoro)","Import","corn","returns",9,-0.0554488859567154,54,0.690455595254269
+"Maize Meal (Gradoro)","Import","corn","returns",12,0.127715607338877,54,0.35740005028925
+"Maize Meal (Gradoro)","Import","corn","returns",15,0.340966889554173,54,0.0116337260250423
+"Maize Meal (Gradoro)","Import","corn","returns",18,-0.0583157932147136,54,0.675317396232349
+"Maize Meal (Gradoro)","Import","corn","levels_des",-6,0.0311714198594725,59,0.814700685442771
+"Maize Meal (Gradoro)","Import","corn","levels_des",-3,0.183229183586747,59,0.164805742353612
+"Maize Meal (Gradoro)","Import","corn","levels_des",0,0.292329974788739,59,0.0246585319712809
+"Maize Meal (Gradoro)","Import","corn","levels_des",1,0.318148806887484,59,0.0140636468030499
+"Maize Meal (Gradoro)","Import","corn","levels_des",3,0.456043678255761,59,0.000283480217148397
+"Maize Meal (Gradoro)","Import","corn","levels_des",6,0.584365219807083,59,1.17857895943486e-06
+"Maize Meal (Gradoro)","Import","corn","levels_des",9,0.587397616198696,59,1.00539604548734e-06
+"Maize Meal (Gradoro)","Import","corn","levels_des",12,0.598431954401692,59,5.56107188803479e-07
+"Maize Meal (Gradoro)","Import","corn","levels_des",15,0.607499865154325,59,3.36109680052563e-07
+"Maize Meal (Gradoro)","Import","corn","levels_des",18,0.472710997281209,59,0.000156515350555656
+"Maize Meal (Gradoro)","Import","corn","returns_des",-6,-0.129018474088519,54,0.352475636903258
+"Maize Meal (Gradoro)","Import","corn","returns_des",-3,0.0739571343499795,54,0.595083503785278
+"Maize Meal (Gradoro)","Import","corn","returns_des",0,-0.127168693782173,54,0.359479674983905
+"Maize Meal (Gradoro)","Import","corn","returns_des",1,-0.0401985227374914,54,0.772885734968911
+"Maize Meal (Gradoro)","Import","corn","returns_des",3,0.0706661851580158,54,0.611612477209407
+"Maize Meal (Gradoro)","Import","corn","returns_des",6,0.244783597501412,54,0.0744328095418079
+"Maize Meal (Gradoro)","Import","corn","returns_des",9,-0.122017170099521,54,0.379428560555619
+"Maize Meal (Gradoro)","Import","corn","returns_des",12,0.134141530946775,54,0.333519216061649
+"Maize Meal (Gradoro)","Import","corn","returns_des",15,0.299300291690217,54,0.0279059482531627
+"Maize Meal (Gradoro)","Import","corn","returns_des",18,0.00643427037024979,54,0.963169857290041
+"Sorghum","Local","sorghum","levels",-6,0.15583676073638,74,0.18488862250058
+"Sorghum","Local","sorghum","levels",-3,-0.0135831916094895,77,0.906663644902937
+"Sorghum","Local","sorghum","levels",0,-0.052242705556868,80,0.645348787947099
+"Sorghum","Local","sorghum","levels",1,-0.0520795180525161,80,0.646382309486023
+"Sorghum","Local","sorghum","levels",3,-0.0206925316093456,80,0.855436580443306
+"Sorghum","Local","sorghum","levels",6,0.0395622248106227,80,0.727522838785762
+"Sorghum","Local","sorghum","levels",9,0.095680022280683,80,0.398524930567288
+"Sorghum","Local","sorghum","levels",12,0.0831974506593096,80,0.463130173533814
+"Sorghum","Local","sorghum","levels",15,-0.00286402328285359,80,0.979884684241872
+"Sorghum","Local","sorghum","levels",18,-0.0648503350786126,80,0.567652496051099
+"Sorghum","Local","sorghum","returns",-6,-0.0652447551550997,67,0.599888746208821
+"Sorghum","Local","sorghum","returns",-3,0.128365966219701,70,0.289582603834836
+"Sorghum","Local","sorghum","returns",0,0.0716797683047321,73,0.546749712624812
+"Sorghum","Local","sorghum","returns",1,-0.0477098198928834,73,0.688548522756119
+"Sorghum","Local","sorghum","returns",3,-0.0065767598877917,73,0.955961138701675
+"Sorghum","Local","sorghum","returns",6,0.0804477872854086,73,0.498672102557273
+"Sorghum","Local","sorghum","returns",9,0.0543709538283771,73,0.647767459319593
+"Sorghum","Local","sorghum","returns",12,0.121937099011341,73,0.304095556892376
+"Sorghum","Local","sorghum","returns",15,0.00704605611860352,73,0.952822135862718
+"Sorghum","Local","sorghum","returns",18,0.088403291150566,73,0.457034184947845
+"Sorghum","Local","sorghum","levels_des",-6,0.181297669387054,74,0.122135656856651
+"Sorghum","Local","sorghum","levels_des",-3,0.00820991689850682,77,0.943505546977363
+"Sorghum","Local","sorghum","levels_des",0,-0.033587513222877,80,0.767404813015879
+"Sorghum","Local","sorghum","levels_des",1,-0.0314106547737679,80,0.782093395427005
+"Sorghum","Local","sorghum","levels_des",3,-0.00653837926776578,80,0.954098126102796
+"Sorghum","Local","sorghum","levels_des",6,0.0502878998226704,80,0.657772893984167
+"Sorghum","Local","sorghum","levels_des",9,0.108839629204477,80,0.336537714082384
+"Sorghum","Local","sorghum","levels_des",12,0.0955734293758225,80,0.399053031019025
+"Sorghum","Local","sorghum","levels_des",15,0.00725110358769025,80,0.949100868065496
+"Sorghum","Local","sorghum","levels_des",18,-0.0602952077535818,80,0.595215910494302
+"Sorghum","Local","sorghum","returns_des",-6,-0.129452243977047,67,0.2964518759191
+"Sorghum","Local","sorghum","returns_des",-3,0.0650167471523409,70,0.592829021606429
+"Sorghum","Local","sorghum","returns_des",0,0.0659572171043683,73,0.57929388260091
+"Sorghum","Local","sorghum","returns_des",1,0.0503967887013597,73,0.671983241810281
+"Sorghum","Local","sorghum","returns_des",3,-0.00744928856248552,73,0.950125587096734
+"Sorghum","Local","sorghum","returns_des",6,0.0496162146274143,73,0.676779902545374
+"Sorghum","Local","sorghum","returns_des",9,-0.0300186815130517,73,0.80095624252215
+"Sorghum","Local","sorghum","returns_des",12,0.0867025072091117,73,0.465771770493244
+"Sorghum","Local","sorghum","returns_des",15,-0.0332074500640974,73,0.780318139522124
+"Sorghum","Local","sorghum","returns_des",18,0.0989075433519897,73,0.405112770165985
+"Rice (Milled)","Local","rice","levels",-6,0.139051571723368,68,0.258099605685583
+"Rice (Milled)","Local","rice","levels",-3,-0.05797113009159,71,0.631080064826459
+"Rice (Milled)","Local","rice","levels",0,-0.260575498673124,74,0.0249430970543633
+"Rice (Milled)","Local","rice","levels",1,-0.263840216506083,74,0.0231222477625269
+"Rice (Milled)","Local","rice","levels",3,-0.220290659899663,74,0.0592963450726256
+"Rice (Milled)","Local","rice","levels",6,-0.150004386479155,74,0.202079371223343
+"Rice (Milled)","Local","rice","levels",9,-0.0534171019816745,74,0.651260921790398
+"Rice (Milled)","Local","rice","levels",12,0.0374730440735576,74,0.751259790486133
+"Rice (Milled)","Local","rice","levels",15,0.145475898483472,74,0.216192116715096
+"Rice (Milled)","Local","rice","levels",18,0.220061404784195,74,0.0595680421783743
+"Rice (Milled)","Local","rice","returns",-6,0.0266150087265268,64,0.834635188135604
+"Rice (Milled)","Local","rice","returns",-3,0.0279514245749703,67,0.822344557912858
+"Rice (Milled)","Local","rice","returns",0,0.0969043003156513,70,0.424846143610253
+"Rice (Milled)","Local","rice","returns",1,-0.319035409973594,70,0.0071042678577609
+"Rice (Milled)","Local","rice","returns",3,0.0732947917586348,70,0.546509659883032
+"Rice (Milled)","Local","rice","returns",6,0.039839347116357,70,0.743328858411862
+"Rice (Milled)","Local","rice","returns",9,0.271423691399938,70,0.0230349820221761
+"Rice (Milled)","Local","rice","returns",12,0.159889013739721,70,0.186113275627126
+"Rice (Milled)","Local","rice","returns",15,0.184967755773291,70,0.125288826949655
+"Rice (Milled)","Local","rice","returns",18,-0.0294521826322346,70,0.808756719942116
+"Rice (Milled)","Local","rice","levels_des",-6,0.102571323747249,68,0.405216020608503
+"Rice (Milled)","Local","rice","levels_des",-3,-0.0759661679710674,71,0.528922729053581
+"Rice (Milled)","Local","rice","levels_des",0,-0.258152328421536,74,0.0263719167096697
+"Rice (Milled)","Local","rice","levels_des",1,-0.260502454801056,74,0.0249851878396595
+"Rice (Milled)","Local","rice","levels_des",3,-0.237730292104979,74,0.0413944330029764
+"Rice (Milled)","Local","rice","levels_des",6,-0.165690847458201,74,0.15829371620466
+"Rice (Milled)","Local","rice","levels_des",9,-0.0959472173652856,74,0.416105671106641
+"Rice (Milled)","Local","rice","levels_des",12,0.00804690818939142,74,0.945750037395497
+"Rice (Milled)","Local","rice","levels_des",15,0.128140849395157,74,0.276579365718013
+"Rice (Milled)","Local","rice","levels_des",18,0.227762420218472,74,0.0509780581286584
+"Rice (Milled)","Local","rice","returns_des",-6,0.0308878444470099,64,0.808555197265466
+"Rice (Milled)","Local","rice","returns_des",-3,0.0175087167533582,67,0.8881632571385
+"Rice (Milled)","Local","rice","returns_des",0,0.0721973567751978,70,0.552548187159706
+"Rice (Milled)","Local","rice","returns_des",1,-0.216730355330142,70,0.0715245858483367
+"Rice (Milled)","Local","rice","returns_des",3,0.0538217121109233,70,0.658114633724377
+"Rice (Milled)","Local","rice","returns_des",6,0.0570004538037213,70,0.639288038107292
+"Rice (Milled)","Local","rice","returns_des",9,0.230399078742717,70,0.0550032904155788
+"Rice (Milled)","Local","rice","returns_des",12,0.135790993082886,70,0.262350212210569
+"Rice (Milled)","Local","rice","returns_des",15,0.0851459447156897,70,0.48340948501656
+"Rice (Milled)","Local","rice","returns_des",18,-0.0462603367406333,70,0.703740185085762
+"Rice (4% Broken)","Import","rice","levels",-6,0.805736608808306,72,1.39647397334821e-17
+"Rice (4% Broken)","Import","rice","levels",-3,0.893328660161578,72,5.12739285306232e-26
+"Rice (4% Broken)","Import","rice","levels",0,0.935338147793878,72,2.60128302242334e-33
+"Rice (4% Broken)","Import","rice","levels",1,0.925786786495328,72,2.74447461709543e-31
+"Rice (4% Broken)","Import","rice","levels",3,0.864877975561041,72,1.22195567872385e-22
+"Rice (4% Broken)","Import","rice","levels",6,0.793899334161965,72,8.91897038004037e-17
+"Rice (4% Broken)","Import","rice","levels",9,0.755413054557523,72,1.75253875591742e-14
+"Rice (4% Broken)","Import","rice","levels",12,0.564329106486037,72,2.43362031211079e-07
+"Rice (4% Broken)","Import","rice","levels",15,0.398183661790796,72,0.00053221564473623
+"Rice (4% Broken)","Import","rice","levels",18,0.296292456114774,72,0.011499357696225
+"Rice (4% Broken)","Import","rice","returns",-6,-0.0315372291898203,70,0.795501860684867
+"Rice (4% Broken)","Import","rice","returns",-3,0.0993740098900049,70,0.413082577165623
+"Rice (4% Broken)","Import","rice","returns",0,0.098312733211371,70,0.418114297276929
+"Rice (4% Broken)","Import","rice","returns",1,0.11892678679404,70,0.32679861659751
+"Rice (4% Broken)","Import","rice","returns",3,0.00747893292691399,70,0.951002898216202
+"Rice (4% Broken)","Import","rice","returns",6,-0.0676112668079091,70,0.578123322258105
+"Rice (4% Broken)","Import","rice","returns",9,0.0226055430649967,70,0.852640974584081
+"Rice (4% Broken)","Import","rice","returns",12,-0.0460822320025646,70,0.704828334558407
+"Rice (4% Broken)","Import","rice","returns",15,-0.0684796928287656,70,0.573238852149825
+"Rice (4% Broken)","Import","rice","returns",18,0.0672978568681274,70,0.579890787045618
+"Rice (4% Broken)","Import","rice","levels_des",-6,0.824184979397531,72,5.93445824425897e-19
+"Rice (4% Broken)","Import","rice","levels_des",-3,0.897640690049207,72,1.30389225133482e-26
+"Rice (4% Broken)","Import","rice","levels_des",0,0.939707011129882,72,2.42189581355647e-34
+"Rice (4% Broken)","Import","rice","levels_des",1,0.930363926871932,72,3.19761803082935e-32
+"Rice (4% Broken)","Import","rice","levels_des",3,0.875971331356223,72,7.40848093768327e-24
+"Rice (4% Broken)","Import","rice","levels_des",6,0.807737706194054,72,1.00796592147279e-17
+"Rice (4% Broken)","Import","rice","levels_des",9,0.75558444517063,72,1.71554681556317e-14
+"Rice (4% Broken)","Import","rice","levels_des",12,0.59016617971492,72,4.87501586442885e-08
+"Rice (4% Broken)","Import","rice","levels_des",15,0.433312139723138,72,0.000143525124242107
+"Rice (4% Broken)","Import","rice","levels_des",18,0.311279850686249,72,0.0077782992188728
+"Rice (4% Broken)","Import","rice","returns_des",-6,0.0296878187068219,70,0.80725598946973
+"Rice (4% Broken)","Import","rice","returns_des",-3,0.105160897951604,70,0.386269268324643
+"Rice (4% Broken)","Import","rice","returns_des",0,0.2475490135847,70,0.0388163257674851
+"Rice (4% Broken)","Import","rice","returns_des",1,0.0555432598702557,70,0.647891228434687
+"Rice (4% Broken)","Import","rice","returns_des",3,0.0293982447963372,70,0.809100338826171
+"Rice (4% Broken)","Import","rice","returns_des",6,-0.0576169525074049,70,0.635662414074249
+"Rice (4% Broken)","Import","rice","returns_des",9,-0.0130301456163297,70,0.914741706446029
+"Rice (4% Broken)","Import","rice","returns_des",12,0.105278072011609,70,0.385737311891874
+"Rice (4% Broken)","Import","rice","returns_des",15,-0.017040824115369,70,0.888646752208274
+"Rice (4% Broken)","Import","rice","returns_des",18,0.0897879998844728,70,0.459792247296511
+"Wheat Grain","Local","wheat","levels",-6,0.461529810731417,124,6.85004707227366e-08
+"Wheat Grain","Local","wheat","levels",-3,0.517747592100883,127,4.56280383329571e-10
+"Wheat Grain","Local","wheat","levels",0,0.563919159276977,130,2.8273436849365e-12
+"Wheat Grain","Local","wheat","levels",1,0.585354783666731,130,2.58985738955416e-13
+"Wheat Grain","Local","wheat","levels",3,0.641472857158787,130,1.99535921721407e-16
+"Wheat Grain","Local","wheat","levels",6,0.727542464815954,130,1.08960652375967e-22
+"Wheat Grain","Local","wheat","levels",9,0.770687929749248,130,8.06799421999138e-27
+"Wheat Grain","Local","wheat","levels",12,0.768489236533446,130,1.37617464534363e-26
+"Wheat Grain","Local","wheat","levels",15,0.733161907697855,130,3.50770905281358e-23
+"Wheat Grain","Local","wheat","levels",18,0.703423159517969,130,1.0431547743564e-20
+"Wheat Grain","Local","wheat","returns",-6,0.03312164346925,121,0.718357196580058
+"Wheat Grain","Local","wheat","returns",-3,-0.119740585604722,124,0.185289920445956
+"Wheat Grain","Local","wheat","returns",0,0.0935360258799471,127,0.295574726506964
+"Wheat Grain","Local","wheat","returns",1,-0.0558053623507959,127,0.533177893875304
+"Wheat Grain","Local","wheat","returns",3,0.0105937933751989,127,0.905902150592299
+"Wheat Grain","Local","wheat","returns",6,0.112281263999474,127,0.20882133736421
+"Wheat Grain","Local","wheat","returns",9,0.205529585707739,127,0.020443600322186
+"Wheat Grain","Local","wheat","returns",12,0.232374576202798,127,0.00856552870557098
+"Wheat Grain","Local","wheat","returns",15,-0.0516632743357367,127,0.564044587476798
+"Wheat Grain","Local","wheat","returns",18,0.120891509529626,127,0.175775013581007
+"Wheat Grain","Local","wheat","levels_des",-6,0.457509653573708,124,9.19007779268668e-08
+"Wheat Grain","Local","wheat","levels_des",-3,0.516167897812854,127,5.26004130172656e-10
+"Wheat Grain","Local","wheat","levels_des",0,0.574882142889548,130,8.50855455827099e-13
+"Wheat Grain","Local","wheat","levels_des",1,0.599060214764082,130,5.11271472570945e-14
+"Wheat Grain","Local","wheat","levels_des",3,0.658334459540134,130,1.71501264314987e-17
+"Wheat Grain","Local","wheat","levels_des",6,0.731360480510449,130,5.06023183673433e-23
+"Wheat Grain","Local","wheat","levels_des",9,0.770287596763336,130,8.89575151239189e-27
+"Wheat Grain","Local","wheat","levels_des",12,0.780200247527581,130,7.46287848144744e-28
+"Wheat Grain","Local","wheat","levels_des",15,0.748275586246586,130,1.43579422198962e-24
+"Wheat Grain","Local","wheat","levels_des",18,0.702773691147272,130,1.17203168576232e-20
+"Wheat Grain","Local","wheat","returns_des",-6,-0.0474683845888808,121,0.605139486191719
+"Wheat Grain","Local","wheat","returns_des",-3,-0.144100356331888,124,0.110326410147478
+"Wheat Grain","Local","wheat","returns_des",0,0.0652676377777209,127,0.465980679472622
+"Wheat Grain","Local","wheat","returns_des",1,-0.0603353745420862,127,0.50041524636537
+"Wheat Grain","Local","wheat","returns_des",3,0.100544315723014,127,0.260704949031728
+"Wheat Grain","Local","wheat","returns_des",6,0.0675186011716859,127,0.45070873243523
+"Wheat Grain","Local","wheat","returns_des",9,0.217931687615226,127,0.0138418229502479
+"Wheat Grain","Local","wheat","returns_des",12,0.204945689791705,127,0.0208120930877335
+"Wheat Grain","Local","wheat","returns_des",15,0.0418353740630059,127,0.640497189893481
+"Wheat Grain","Local","wheat","returns_des",18,0.0626653467688764,127,0.483984494880951
+"Wheat Flour","Import","wheat","levels",-6,0.414068948570553,171,1.80534591778508e-08
+"Wheat Flour","Import","wheat","levels",-3,0.463837859609191,174,1.1491229842068e-10
+"Wheat Flour","Import","wheat","levels",0,0.503728509056242,177,8.88032680138667e-13
+"Wheat Flour","Import","wheat","levels",1,0.527878206915451,177,4.3513427883189e-14
+"Wheat Flour","Import","wheat","levels",3,0.568695997311695,177,1.48980154906216e-16
+"Wheat Flour","Import","wheat","levels",6,0.626049973805116,177,1.18813686680098e-20
+"Wheat Flour","Import","wheat","levels",9,0.649278052895696,177,1.45056541204635e-22
+"Wheat Flour","Import","wheat","levels",12,0.615978465331447,177,7.17026400262181e-20
+"Wheat Flour","Import","wheat","levels",15,0.552125653696647,177,1.63909167867298e-15
+"Wheat Flour","Import","wheat","levels",18,0.504823875701487,177,7.78444586711675e-13
+"Wheat Flour","Import","wheat","returns",-6,-0.0532153222359651,166,0.495913692467711
+"Wheat Flour","Import","wheat","returns",-3,0.0617092762061603,169,0.42543552777752
+"Wheat Flour","Import","wheat","returns",0,0.136332383273279,172,0.0745406713698278
+"Wheat Flour","Import","wheat","returns",1,0.166606207690535,172,0.0289345285163171
+"Wheat Flour","Import","wheat","returns",3,0.0501894254921223,172,0.513214455225858
+"Wheat Flour","Import","wheat","returns",6,0.0461916255954038,172,0.547372917446739
+"Wheat Flour","Import","wheat","returns",9,0.0814306688401232,172,0.288267234994626
+"Wheat Flour","Import","wheat","returns",12,0.15602653172382,172,0.0409651579487205
+"Wheat Flour","Import","wheat","returns",15,-0.152734659424918,172,0.0454742004603765
+"Wheat Flour","Import","wheat","returns",18,-0.0345857984431106,172,0.652410663683481
+"Wheat Flour","Import","wheat","levels_des",-6,0.416121659301372,171,1.51002565802797e-08
+"Wheat Flour","Import","wheat","levels_des",-3,0.461033010127192,174,1.53502856474714e-10
+"Wheat Flour","Import","wheat","levels_des",0,0.507916847550978,177,5.35308232155275e-13
+"Wheat Flour","Import","wheat","levels_des",1,0.535476370231629,177,1.60181830257763e-14
+"Wheat Flour","Import","wheat","levels_des",3,0.580328462436613,177,2.54916324054687e-17
+"Wheat Flour","Import","wheat","levels_des",6,0.637719480686967,177,1.3616165262352e-21
+"Wheat Flour","Import","wheat","levels_des",9,0.649740486852706,177,1.32358437726295e-22
+"Wheat Flour","Import","wheat","levels_des",12,0.617559002884535,177,5.43098452443091e-20
+"Wheat Flour","Import","wheat","levels_des",15,0.560262573725758,177,5.13361601402463e-16
+"Wheat Flour","Import","wheat","levels_des",18,0.509548629143611,177,4.38676970065325e-13
+"Wheat Flour","Import","wheat","returns_des",-6,-0.0332871918436361,166,0.670288011795561
+"Wheat Flour","Import","wheat","returns_des",-3,0.0553374233619108,169,0.474859205534831
+"Wheat Flour","Import","wheat","returns_des",0,0.0835660098131387,172,0.27576869678108
+"Wheat Flour","Import","wheat","returns_des",1,0.178191531947131,172,0.0193526339135112
+"Wheat Flour","Import","wheat","returns_des",3,0.0775867187155646,172,0.311707164467876
+"Wheat Flour","Import","wheat","returns_des",6,0.0638800612601154,172,0.405114985521768
+"Wheat Flour","Import","wheat","returns_des",9,0.0885208552756505,172,0.248195634454871
+"Wheat Flour","Import","wheat","returns_des",12,0.10083080978935,172,0.188141229234439
+"Wheat Flour","Import","wheat","returns_des",15,-0.151159382073547,172,0.0477744058955748
+"Wheat Flour","Import","wheat","returns_des",18,-0.00873890436165122,172,0.909415277625803
+"Spaghetti (Gourmet)","Import","wheat","levels",-6,0.740971810716907,79,5.85354487475778e-15
+"Spaghetti (Gourmet)","Import","wheat","levels",-3,0.798504480866178,79,1.20294819381614e-18
+"Spaghetti (Gourmet)","Import","wheat","levels",0,0.835915682149562,79,9.35826606146333e-22
+"Spaghetti (Gourmet)","Import","wheat","levels",1,0.840157935500405,79,3.71269690962907e-22
+"Spaghetti (Gourmet)","Import","wheat","levels",3,0.835006704743829,79,1.1369484058909e-21
+"Spaghetti (Gourmet)","Import","wheat","levels",6,0.782502962545178,79,1.64817030681146e-17
+"Spaghetti (Gourmet)","Import","wheat","levels",9,0.685162124747455,79,3.2925646202807e-12
+"Spaghetti (Gourmet)","Import","wheat","levels",12,0.638696857222312,79,2.40213983190032e-10
+"Spaghetti (Gourmet)","Import","wheat","levels",15,0.574034115149498,79,3.1897947009259e-08
+"Spaghetti (Gourmet)","Import","wheat","levels",18,0.486351117984916,79,5.51329661963922e-06
+"Spaghetti (Gourmet)","Import","wheat","returns",-6,-0.112711521469948,77,0.329075893140221
+"Spaghetti (Gourmet)","Import","wheat","returns",-3,0.017873163678581,77,0.877386289650436
+"Spaghetti (Gourmet)","Import","wheat","returns",0,0.0740161783339641,77,0.522338756772309
+"Spaghetti (Gourmet)","Import","wheat","returns",1,0.024842049578947,77,0.830191727777926
+"Spaghetti (Gourmet)","Import","wheat","returns",3,-0.00382995983045211,77,0.973628198122334
+"Spaghetti (Gourmet)","Import","wheat","returns",6,-0.00292639460978575,77,0.979848344625223
+"Spaghetti (Gourmet)","Import","wheat","returns",9,-0.0267324749198069,77,0.817485007507987
+"Spaghetti (Gourmet)","Import","wheat","returns",12,-0.0370280497142119,77,0.749184406521207
+"Spaghetti (Gourmet)","Import","wheat","returns",15,-0.109287679806833,77,0.344073218640997
+"Spaghetti (Gourmet)","Import","wheat","returns",18,-0.057825618146593,77,0.617401442596941
+"Spaghetti (Gourmet)","Import","wheat","levels_des",-6,0.755108083113643,79,9.04562751329278e-16
+"Spaghetti (Gourmet)","Import","wheat","levels_des",-3,0.803852686750555,79,4.75673797007219e-19
+"Spaghetti (Gourmet)","Import","wheat","levels_des",0,0.837625577294677,79,6.46770987926378e-22
+"Spaghetti (Gourmet)","Import","wheat","levels_des",1,0.843134633401196,79,1.9094931884051e-22
+"Spaghetti (Gourmet)","Import","wheat","levels_des",3,0.843138115036183,79,1.90799333734903e-22
+"Spaghetti (Gourmet)","Import","wheat","levels_des",6,0.811612837858994,79,1.17523369384523e-19
+"Spaghetti (Gourmet)","Import","wheat","levels_des",9,0.709504634700497,79,2.49704892389075e-13
+"Spaghetti (Gourmet)","Import","wheat","levels_des",12,0.644500020483511,79,1.4630605819465e-10
+"Spaghetti (Gourmet)","Import","wheat","levels_des",15,0.568818836126142,79,4.52305090571008e-08
+"Spaghetti (Gourmet)","Import","wheat","levels_des",18,0.489759093150213,79,4.6306091960308e-06
+"Spaghetti (Gourmet)","Import","wheat","returns_des",-6,-0.0852325035916216,77,0.461109130606407
+"Spaghetti (Gourmet)","Import","wheat","returns_des",-3,0.0778681297629306,77,0.500860091887921
+"Spaghetti (Gourmet)","Import","wheat","returns_des",0,0.0626732873384733,77,0.588167561080202
+"Spaghetti (Gourmet)","Import","wheat","returns_des",1,0.00342789536178845,77,0.976395839499233
+"Spaghetti (Gourmet)","Import","wheat","returns_des",3,-0.00507217286362253,77,0.965079439083877
+"Spaghetti (Gourmet)","Import","wheat","returns_des",6,-0.00376778868081513,77,0.974056138450702
+"Spaghetti (Gourmet)","Import","wheat","returns_des",9,0.00319481374919608,77,0.978000404125827
+"Spaghetti (Gourmet)","Import","wheat","returns_des",12,-0.0152523123618275,77,0.895255586193178
+"Spaghetti (Gourmet)","Import","wheat","returns_des",15,-0.1462094607585,77,0.2045020877879
+"Spaghetti (Gourmet)","Import","wheat","returns_des",18,-0.0723212372335545,77,0.531934585535593
+"Refined Vegetable Oil","Import","soybeans","levels",-6,0.589461624354519,171,2.21959417949322e-17
+"Refined Vegetable Oil","Import","soybeans","levels",-3,0.625605011809384,174,2.73602426381865e-20
+"Refined Vegetable Oil","Import","soybeans","levels",0,0.63427175491656,177,2.60732659207592e-21
+"Refined Vegetable Oil","Import","soybeans","levels",1,0.64123750689801,177,6.95747189495541e-22
+"Refined Vegetable Oil","Import","soybeans","levels",3,0.65078443464268,177,1.07567512518488e-22
+"Refined Vegetable Oil","Import","soybeans","levels",6,0.653967563612519,177,5.68659608494463e-23
+"Refined Vegetable Oil","Import","soybeans","levels",9,0.61473404679665,177,8.91365519191772e-20
+"Refined Vegetable Oil","Import","soybeans","levels",12,0.558326270097307,177,6.78655125342576e-16
+"Refined Vegetable Oil","Import","soybeans","levels",15,0.483217797778936,177,9.61134331116906e-12
+"Refined Vegetable Oil","Import","soybeans","levels",18,0.412180027691929,177,1.19594119360475e-08
+"Refined Vegetable Oil","Import","soybeans","returns",-6,0.182935488131161,166,0.0183197058257268
+"Refined Vegetable Oil","Import","soybeans","returns",-3,0.146684085770122,169,0.0570343693334114
+"Refined Vegetable Oil","Import","soybeans","returns",0,0.0151285193461236,172,0.843848529879619
+"Refined Vegetable Oil","Import","soybeans","returns",1,0.0215549534793112,172,0.778969781270432
+"Refined Vegetable Oil","Import","soybeans","returns",3,0.138992342333886,172,0.0690011698694856
+"Refined Vegetable Oil","Import","soybeans","returns",6,0.120065924852256,172,0.116683246988876
+"Refined Vegetable Oil","Import","soybeans","returns",9,0.164924006677373,172,0.0306171492529338
+"Refined Vegetable Oil","Import","soybeans","returns",12,0.0625782321088675,172,0.41477412757404
+"Refined Vegetable Oil","Import","soybeans","returns",15,0.0276659250852336,172,0.718653876551263
+"Refined Vegetable Oil","Import","soybeans","returns",18,0.0880402891180693,172,0.250782980055927
+"Refined Vegetable Oil","Import","soybeans","levels_des",-6,0.593336934425994,171,1.21569713940091e-17
+"Refined Vegetable Oil","Import","soybeans","levels_des",-3,0.633165661053725,174,6.97256175371913e-21
+"Refined Vegetable Oil","Import","soybeans","levels_des",0,0.647360996187492,177,2.11709161461863e-22
+"Refined Vegetable Oil","Import","soybeans","levels_des",1,0.655658945919884,177,4.0401652235884e-23
+"Refined Vegetable Oil","Import","soybeans","levels_des",3,0.661099356786485,177,1.32549645333317e-23
+"Refined Vegetable Oil","Import","soybeans","levels_des",6,0.646459501013262,177,2.52667968750146e-22
+"Refined Vegetable Oil","Import","soybeans","levels_des",9,0.613336679947366,177,1.13683235813289e-19
+"Refined Vegetable Oil","Import","soybeans","levels_des",12,0.569032631707055,177,1.41697599010301e-16
+"Refined Vegetable Oil","Import","soybeans","levels_des",15,0.49213236859951,177,3.48069310709608e-12
+"Refined Vegetable Oil","Import","soybeans","levels_des",18,0.408287571611328,177,1.68851113453668e-08
+"Refined Vegetable Oil","Import","soybeans","returns_des",-6,0.208553188214085,166,0.0070086773195218
+"Refined Vegetable Oil","Import","soybeans","returns_des",-3,0.113955840082564,169,0.140147725513267
+"Refined Vegetable Oil","Import","soybeans","returns_des",0,0.0570352634535899,172,0.457384021996755
+"Refined Vegetable Oil","Import","soybeans","returns_des",1,0.180910824561961,172,0.017551181052911
+"Refined Vegetable Oil","Import","soybeans","returns_des",3,0.137068399747892,172,0.072973012671122
+"Refined Vegetable Oil","Import","soybeans","returns_des",6,0.118331421205085,172,0.122099093242791
+"Refined Vegetable Oil","Import","soybeans","returns_des",9,0.130265873698091,172,0.0885253012515543
+"Refined Vegetable Oil","Import","soybeans","returns_des",12,0.118303069411482,172,0.122189209955967
+"Refined Vegetable Oil","Import","soybeans","returns_des",15,0.0127109104587943,172,0.868555845585161
+"Refined Vegetable Oil","Import","soybeans","returns_des",18,0.0794102649426094,172,0.300436417524556
+"Milk (Bongu)","Import","milk","levels",-6,0.558265012964949,124,1.62030512532618e-11
+"Milk (Bongu)","Import","milk","levels",-3,0.546139756794817,127,3.11375774582281e-11
+"Milk (Bongu)","Import","milk","levels",0,0.616140271438809,130,6.05633363659699e-15
+"Milk (Bongu)","Import","milk","levels",1,0.635799393137797,130,4.40452106294896e-16
+"Milk (Bongu)","Import","milk","levels",3,0.672639517681579,130,1.88443305274473e-18
+"Milk (Bongu)","Import","milk","levels",6,0.693362668310338,130,6.12335600204565e-20
+"Milk (Bongu)","Import","milk","levels",9,0.685621566522103,130,2.27684860478412e-19
+"Milk (Bongu)","Import","milk","levels",12,0.697871916198479,130,2.79515033899417e-20
+"Milk (Bongu)","Import","milk","levels",15,0.636465236381439,130,4.01707560202105e-16
+"Milk (Bongu)","Import","milk","levels",18,0.519675236368303,130,2.36284303905717e-10
+"Milk (Bongu)","Import","milk","returns",-6,-0.0367641699373341,121,0.688903515038496
+"Milk (Bongu)","Import","milk","returns",-3,-0.109818153846896,124,0.224681159317453
+"Milk (Bongu)","Import","milk","returns",0,0.154870783083073,127,0.0821132151939312
+"Milk (Bongu)","Import","milk","returns",1,0.110644923066891,127,0.215574236803795
+"Milk (Bongu)","Import","milk","returns",3,0.00104282959068377,127,0.990716106446417
+"Milk (Bongu)","Import","milk","returns",6,-0.0280544186613028,127,0.754210072434298
+"Milk (Bongu)","Import","milk","returns",9,-0.0223164034605359,127,0.803331772978822
+"Milk (Bongu)","Import","milk","returns",12,0.19787957474393,127,0.0257447787847885
+"Milk (Bongu)","Import","milk","returns",15,-0.00225367040791256,127,0.979938117915204
+"Milk (Bongu)","Import","milk","returns",18,-0.0214418105994323,127,0.81089212860076
+"Milk (Bongu)","Import","milk","levels_des",-6,0.575412949741332,124,2.7422581053724e-12
+"Milk (Bongu)","Import","milk","levels_des",-3,0.566694631962474,127,3.78847408549046e-12
+"Milk (Bongu)","Import","milk","levels_des",0,0.625391161439393,130,1.80541706864414e-15
+"Milk (Bongu)","Import","milk","levels_des",1,0.639215852404119,130,2.73955148818627e-16
+"Milk (Bongu)","Import","milk","levels_des",3,0.678941317749224,130,6.84710035837776e-19
+"Milk (Bongu)","Import","milk","levels_des",6,0.715219960766387,130,1.1884812816644e-21
+"Milk (Bongu)","Import","milk","levels_des",9,0.711363488525747,130,2.44668576169402e-21
+"Milk (Bongu)","Import","milk","levels_des",12,0.706916058364477,130,5.54502745463652e-21
+"Milk (Bongu)","Import","milk","levels_des",15,0.64047995153848,130,2.29467287757471e-16
+"Milk (Bongu)","Import","milk","levels_des",18,0.537067832200165,130,4.47749002058028e-11
+"Milk (Bongu)","Import","milk","returns_des",-6,-0.022340001856076,121,0.80783529323492
+"Milk (Bongu)","Import","milk","returns_des",-3,-0.0648604738254021,124,0.474179714792958
+"Milk (Bongu)","Import","milk","returns_des",0,0.160855180966761,127,0.0708237470081602
+"Milk (Bongu)","Import","milk","returns_des",1,0.0993917410828004,127,0.266237598564869
+"Milk (Bongu)","Import","milk","returns_des",3,-0.00683693751427707,127,0.939190407705167
+"Milk (Bongu)","Import","milk","returns_des",6,-0.0189353769498062,127,0.832653241516803
+"Milk (Bongu)","Import","milk","returns_des",9,0.0337975055926874,127,0.706009778098187
+"Milk (Bongu)","Import","milk","returns_des",12,0.196883131167227,127,0.0265149813084409
+"Milk (Bongu)","Import","milk","returns_des",15,-0.0139724539493125,127,0.876102164546559
+"Milk (Bongu)","Import","milk","returns_des",18,-0.0117439361832218,127,0.895740988968698

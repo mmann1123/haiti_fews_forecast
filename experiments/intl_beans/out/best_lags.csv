@@ -1,0 +1,61 @@
+"fews_commodity","product_source","usda_slug","basis","lag","r","n","p"
+"Rice (4% Broken)","Import","rice","levels",0,0.935338147793878,72,2.60128302242334e-33
+"Spaghetti (Gourmet)","Import","wheat","levels",1,0.840157935500405,79,3.71269690962907e-22
+"Wheat Grain","Local","wheat","levels",9,0.770687929749248,130,8.06799421999138e-27
+"Milk (Bongu)","Import","milk","levels",12,0.697871916198479,130,2.79515033899417e-20
+"Refined Vegetable Oil","Import","soybeans","levels",6,0.653967563612519,177,5.68659608494463e-23
+"Wheat Flour","Import","wheat","levels",9,0.649278052895696,177,1.45056541204635e-22
+"Maize Grain (Yellow)","Local","corn","levels",-3,0.619877652486165,147,5.69501578636997e-17
+"Maize Meal (Gradoro)","Import","corn","levels",6,0.612618755478049,59,2.51187151808957e-07
+"Beans (Black)","Local","beans_dry_edible","levels",9,0.562311303731347,64,1.32831764726948e-06
+"Beans (Red)","Local","beans_dry_edible","levels",18,0.505437379840159,55,8.28674392794634e-05
+"Maize Meal","Local","corn","levels",-3,0.500902935751261,151,5.75060340774283e-11
+"Beans (Pinto)","Import","beans_dry_edible","levels",9,0.442715488833882,64,0.000249116298954335
+"Beans (Lima)","Local","beans_dry_edible","levels",18,0.404375580320381,53,0.00267237883075812
+"Rice (Milled)","Local","rice","levels",1,-0.263840216506083,74,0.0231222477625269
+"Sorghum","Local","sorghum","levels",-6,0.15583676073638,74,0.18488862250058
+"Rice (4% Broken)","Import","rice","levels_des",0,0.939707011129882,72,2.42189581355647e-34
+"Spaghetti (Gourmet)","Import","wheat","levels_des",3,0.843138115036183,79,1.90799333734903e-22
+"Wheat Grain","Local","wheat","levels_des",12,0.780200247527581,130,7.46287848144744e-28
+"Milk (Bongu)","Import","milk","levels_des",6,0.715219960766387,130,1.1884812816644e-21
+"Refined Vegetable Oil","Import","soybeans","levels_des",3,0.661099356786485,177,1.32549645333317e-23
+"Wheat Flour","Import","wheat","levels_des",9,0.649740486852706,177,1.32358437726295e-22
+"Maize Grain (Yellow)","Local","corn","levels_des",-3,0.617300789460087,147,8.31461648032373e-17
+"Maize Meal (Gradoro)","Import","corn","levels_des",15,0.607499865154325,59,3.36109680052563e-07
+"Beans (Black)","Local","beans_dry_edible","levels_des",9,0.568535514763412,64,9.54176556387686e-07
+"Beans (Red)","Local","beans_dry_edible","levels_des",18,0.544586904225866,55,1.72132863724402e-05
+"Beans (Lima)","Local","beans_dry_edible","levels_des",18,0.531921702978914,53,4.14991623253711e-05
+"Maize Meal","Local","corn","levels_des",0,0.498857419457797,151,7.07314893724794e-11
+"Beans (Pinto)","Import","beans_dry_edible","levels_des",9,0.436399481456841,64,0.00031225877422981
+"Rice (Milled)","Local","rice","levels_des",1,-0.260502454801056,74,0.0249851878396595
+"Sorghum","Local","sorghum","levels_des",-6,0.181297669387054,74,0.122135656856651
+"Beans (Pinto)","Import","beans_dry_edible","returns",18,-0.34930524713158,52,0.0111439814322687
+"Maize Meal (Gradoro)","Import","corn","returns",15,0.340966889554173,54,0.0116337260250423
+"Rice (Milled)","Local","rice","returns",1,-0.319035409973594,70,0.0071042678577609
+"Beans (Lima)","Local","beans_dry_edible","returns",18,-0.272814424647227,50,0.0552592056409372
+"Beans (Red)","Local","beans_dry_edible","returns",18,-0.257167475604771,52,0.0656991991938966
+"Maize Meal","Local","corn","returns",-3,0.254861740451228,144,0.00205091438237414
+"Wheat Grain","Local","wheat","returns",12,0.232374576202798,127,0.00856552870557098
+"Maize Grain (Yellow)","Local","corn","returns",6,-0.210797657261834,146,0.0106508825441455
+"Beans (Black)","Local","beans_dry_edible","returns",-3,0.204340224954076,70,0.0897336195853572
+"Milk (Bongu)","Import","milk","returns",12,0.19787957474393,127,0.0257447787847885
+"Refined Vegetable Oil","Import","soybeans","returns",-6,0.182935488131161,166,0.0183197058257268
+"Wheat Flour","Import","wheat","returns",1,0.166606207690535,172,0.0289345285163171
+"Sorghum","Local","sorghum","returns",-3,0.128365966219701,70,0.289582603834836
+"Rice (4% Broken)","Import","rice","returns",1,0.11892678679404,70,0.32679861659751
+"Spaghetti (Gourmet)","Import","wheat","returns",-6,-0.112711521469948,77,0.329075893140221
+"Beans (Pinto)","Import","beans_dry_edible","returns_des",18,-0.405581939429179,52,0.00285485081058285
+"Maize Meal (Gradoro)","Import","corn","returns_des",15,0.299300291690217,54,0.0279059482531627
+"Beans (Red)","Local","beans_dry_edible","returns_des",18,-0.265272371742926,52,0.0573529732332225
+"Rice (4% Broken)","Import","rice","returns_des",0,0.2475490135847,70,0.0388163257674851
+"Beans (Lima)","Local","beans_dry_edible","returns_des",18,-0.237086531692342,50,0.0973613290273759
+"Rice (Milled)","Local","rice","returns_des",9,0.230399078742717,70,0.0550032904155788
+"Beans (Black)","Local","beans_dry_edible","returns_des",-3,0.229608019675238,70,0.0558659645005326
+"Wheat Grain","Local","wheat","returns_des",9,0.217931687615226,127,0.0138418229502479
+"Refined Vegetable Oil","Import","soybeans","returns_des",-6,0.208553188214085,166,0.0070086773195218
+"Maize Meal","Local","corn","returns_des",1,0.19733431766317,144,0.0177527761568037
+"Milk (Bongu)","Import","milk","returns_des",12,0.196883131167227,127,0.0265149813084409
+"Wheat Flour","Import","wheat","returns_des",1,0.178191531947131,172,0.0193526339135112
+"Spaghetti (Gourmet)","Import","wheat","returns_des",15,-0.1462094607585,77,0.2045020877879
+"Maize Grain (Yellow)","Local","corn","returns_des",15,0.141912596330079,146,0.0875146754564503
+"Sorghum","Local","sorghum","returns_des",-6,-0.129452243977047,67,0.2964518759191

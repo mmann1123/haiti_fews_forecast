@@ -1,99 +1,141 @@
-# USDA-vs-FEWS correlation experiment
+# USDA-vs-FEWS multi-pair correlation experiment
 
-**Overlap window:** 2019-09-01 to 2026-03-01 (n = 70 months)
+Pairs tested: 17. USDA series fetched: 7.
+FEWS data through: 2026-03-01.
+USDA data through: 2026-03-01.
 
-Tests whether US producer prices for dry edible beans (aggregate class,
-excluding chickpeas) lead Haiti's FEWS Beans (Black) retail price at any
-practical lag. If yes, the USDA series would be a candidate additional
-regressor for v09 (similar to ACLED but with a much shorter operational
-lag -- NASS releases monthly data with ~1-month delay vs ACLED's 12).
+## Verdict per pair (deseasonalized monthly returns)
 
-## Verdict
+Headline test: does USDA US-producer price *change* lead the FEWS Haiti
+retail price *change* at any lag from −6 to +18 months, after removing
+month-of-year seasonality from both sides?
 
-**NO-GO: best |r| = 0.257 at lag = 1 is below the 0.30 threshold. The USDA aggregate dry-bean series does not lead Haiti's FEWS beans strongly enough to justify wiring into the model. Document as a negative result.**
+**FX control:** FEWS retail prices are taken in USD (FEWS's own conversion
+using the prevailing HTG/USD rate at observation time). This strips out
+HTG depreciation / domestic inflation, which would otherwise produce a
+shared trend with any nominal USD series.
 
-## Headline lag scan (deseasonalized monthly returns)
+- **GO** Beans (Pinto) (Import) ↔ beans_dry_edible: |r| = 0.406 at lag = +18 (n = 52) **
+- no-go Maize Meal (Gradoro) (Import) ↔ corn: best |r| = 0.299 at lag = +15 (n = 54)
+- no-go Beans (Red) (Local) ↔ beans_dry_edible: best |r| = 0.265 at lag = +18 (n = 52)
+- no-go Rice (4% Broken) (Import) ↔ rice: best |r| = 0.248 at lag = +0 (n = 70)
+- no-go Beans (Lima) (Local) ↔ beans_dry_edible: best |r| = 0.237 at lag = +18 (n = 50)
+- no-go Rice (Milled) (Local) ↔ rice: best |r| = 0.230 at lag = +9 (n = 70)
+- no-go Beans (Black) (Local) ↔ beans_dry_edible: best |r| = 0.230 at lag = -3 (n = 70)
+- no-go Wheat Grain (Local) ↔ wheat: best |r| = 0.218 at lag = +9 (n = 127)
+- no-go Refined Vegetable Oil (Import) ↔ soybeans: best |r| = 0.209 at lag = -6 (n = 166)
+- no-go Maize Meal (Local) ↔ corn: best |r| = 0.197 at lag = +1 (n = 144)
+- no-go Milk (Bongu) (Import) ↔ milk: best |r| = 0.197 at lag = +12 (n = 127)
+- no-go Wheat Flour (Import) ↔ wheat: best |r| = 0.178 at lag = +1 (n = 172)
+- no-go Spaghetti (Gourmet) (Import) ↔ wheat: best |r| = 0.146 at lag = +15 (n = 77)
+- no-go Maize Grain (Yellow) (Local) ↔ corn: best |r| = 0.142 at lag = +15 (n = 146)
+- no-go Sorghum (Local) ↔ sorghum: best |r| = 0.129 at lag = -6 (n = 67)
 
-This is the cleanest test -- removes both trend (returns) and month-of-year
-seasonality. Positive lag = past USDA predicts current FEWS.
+Threshold for GO: |r| >= 0.30 at the best lag (n ~ 70 → p ~ 0.01).
 
+## Best lag per (pair, basis)
 
-### Deseasonalized Delta-log correlations
+### Deseasonalized monthly returns (headline)
 
-| lag (months) | r | n | p | sig |
-|---|---|---|---|---|
-| -6 | +0.016 | 70 | 0.9 |  |
-| -3 | +0.186 | 69 | 0.13 |  |
-| 0 | +0.077 | 66 | 0.54 |  |
-| 1 | +0.257 | 65 | 0.039 | * |
-| 3 | -0.214 | 63 | 0.092 |  |
-| 6 | +0.137 | 60 | 0.29 |  |
-| 9 | -0.133 | 57 | 0.32 |  |
-| 12 | +0.179 | 54 | 0.19 |  |
-| 15 | +0.085 | 51 | 0.55 |  |
-| 18 | -0.022 | 48 | 0.88 |  |
+| FEWS commodity | source | USDA | best lag | r | n | p | sig |
+|---|---|---|---:|---:|---:|---:|---|
+| Beans (Pinto) | Import | beans_dry_edible | +18 | -0.406 | 52 | 0.0029 | ** |
+| Maize Meal (Gradoro) | Import | corn | +15 | +0.299 | 54 | 0.028 | * |
+| Beans (Red) | Local | beans_dry_edible | +18 | -0.265 | 52 | 0.057 |  |
+| Rice (4% Broken) | Import | rice | +0 | +0.248 | 70 | 0.039 | * |
+| Beans (Lima) | Local | beans_dry_edible | +18 | -0.237 | 50 | 0.097 |  |
+| Rice (Milled) | Local | rice | +9 | +0.230 | 70 | 0.055 |  |
+| Beans (Black) | Local | beans_dry_edible | -3 | +0.230 | 70 | 0.056 |  |
+| Wheat Grain | Local | wheat | +9 | +0.218 | 127 | 0.014 | * |
+| Refined Vegetable Oil | Import | soybeans | -6 | +0.209 | 166 | 0.007 | ** |
+| Maize Meal | Local | corn | +1 | +0.197 | 144 | 0.018 | * |
+| Milk (Bongu) | Import | milk | +12 | +0.197 | 127 | 0.027 | * |
+| Wheat Flour | Import | wheat | +1 | +0.178 | 172 | 0.019 | * |
+| Spaghetti (Gourmet) | Import | wheat | +15 | -0.146 | 77 | 0.2 |  |
+| Maize Grain (Yellow) | Local | corn | +15 | +0.142 | 146 | 0.088 |  |
+| Sorghum | Local | sorghum | -6 | -0.129 | 67 | 0.3 |  |
 
-## Other tables
+### Raw monthly returns
 
-### Raw Delta-log correlations
+| FEWS commodity | source | USDA | best lag | r | n | p | sig |
+|---|---|---|---:|---:|---:|---:|---|
+| Beans (Pinto) | Import | beans_dry_edible | +18 | -0.349 | 52 | 0.011 | * |
+| Maize Meal (Gradoro) | Import | corn | +15 | +0.341 | 54 | 0.012 | * |
+| Rice (Milled) | Local | rice | +1 | -0.319 | 70 | 0.0071 | ** |
+| Beans (Lima) | Local | beans_dry_edible | +18 | -0.273 | 50 | 0.055 |  |
+| Beans (Red) | Local | beans_dry_edible | +18 | -0.257 | 52 | 0.066 |  |
+| Maize Meal | Local | corn | -3 | +0.255 | 144 | 0.0021 | ** |
+| Wheat Grain | Local | wheat | +12 | +0.232 | 127 | 0.0086 | ** |
+| Maize Grain (Yellow) | Local | corn | +6 | -0.211 | 146 | 0.011 | * |
+| Beans (Black) | Local | beans_dry_edible | -3 | +0.204 | 70 | 0.09 |  |
+| Milk (Bongu) | Import | milk | +12 | +0.198 | 127 | 0.026 | * |
+| Refined Vegetable Oil | Import | soybeans | -6 | +0.183 | 166 | 0.018 | * |
+| Wheat Flour | Import | wheat | +1 | +0.167 | 172 | 0.029 | * |
+| Sorghum | Local | sorghum | -3 | +0.128 | 70 | 0.29 |  |
+| Rice (4% Broken) | Import | rice | +1 | +0.119 | 70 | 0.33 |  |
+| Spaghetti (Gourmet) | Import | wheat | -6 | -0.113 | 77 | 0.33 |  |
 
-| lag (months) | r | n | p | sig |
-|---|---|---|---|---|
-| -6 | +0.088 | 70 | 0.47 |  |
-| -3 | +0.097 | 69 | 0.43 |  |
-| 0 | +0.125 | 66 | 0.32 |  |
-| 1 | +0.386 | 65 | 0.0015 | ** |
-| 3 | -0.215 | 63 | 0.09 |  |
-| 6 | +0.198 | 60 | 0.13 |  |
-| 9 | -0.170 | 57 | 0.21 |  |
-| 12 | +0.172 | 54 | 0.21 |  |
-| 15 | +0.025 | 51 | 0.86 |  |
-| 18 | +0.023 | 48 | 0.87 |  |
+### Deseasonalized log levels
 
-### Deseasonalized log-level correlations
+| FEWS commodity | source | USDA | best lag | r | n | p | sig |
+|---|---|---|---:|---:|---:|---:|---|
+| Rice (4% Broken) | Import | rice | +0 | +0.940 | 72 | 2.4e-34 | *** |
+| Spaghetti (Gourmet) | Import | wheat | +3 | +0.843 | 79 | 1.9e-22 | *** |
+| Wheat Grain | Local | wheat | +12 | +0.780 | 130 | 7.5e-28 | *** |
+| Milk (Bongu) | Import | milk | +6 | +0.715 | 130 | 1.2e-21 | *** |
+| Refined Vegetable Oil | Import | soybeans | +3 | +0.661 | 177 | 1.3e-23 | *** |
+| Wheat Flour | Import | wheat | +9 | +0.650 | 177 | 1.3e-22 | *** |
+| Maize Grain (Yellow) | Local | corn | -3 | +0.617 | 147 | 8.3e-17 | *** |
+| Maize Meal (Gradoro) | Import | corn | +15 | +0.607 | 59 | 3.4e-07 | *** |
+| Beans (Black) | Local | beans_dry_edible | +9 | +0.569 | 64 | 9.5e-07 | *** |
+| Beans (Red) | Local | beans_dry_edible | +18 | +0.545 | 55 | 1.7e-05 | *** |
+| Beans (Lima) | Local | beans_dry_edible | +18 | +0.532 | 53 | 4.1e-05 | *** |
+| Maize Meal | Local | corn | +0 | +0.499 | 151 | 7.1e-11 | *** |
+| Beans (Pinto) | Import | beans_dry_edible | +9 | +0.436 | 64 | 0.00031 | *** |
+| Rice (Milled) | Local | rice | +1 | -0.261 | 74 | 0.025 | * |
+| Sorghum | Local | sorghum | -6 | +0.181 | 74 | 0.12 |  |
 
-| lag (months) | r | n | p | sig |
-|---|---|---|---|---|
-| -6 | +0.149 | 73 | 0.21 |  |
-| -3 | +0.307 | 72 | 0.0087 | ** |
-| 0 | +0.390 | 70 | 0.00085 | *** |
-| 1 | +0.429 | 69 | 0.00023 | *** |
-| 3 | +0.483 | 67 | 3.5e-05 | *** |
-| 6 | +0.570 | 64 | 8.9e-07 | *** |
-| 9 | +0.621 | 61 | 9.2e-08 | *** |
-| 12 | +0.710 | 58 | 4.2e-10 | *** |
-| 15 | +0.712 | 55 | 1.1e-09 | *** |
-| 18 | +0.631 | 52 | 5.2e-07 | *** |
+### Raw log levels (interpret with care — trend-shared)
 
-### Raw log-level correlations (interpret with care -- trend-shared)
-
-| lag (months) | r | n | p | sig |
-|---|---|---|---|---|
-| -6 | +0.163 | 73 | 0.17 |  |
-| -3 | +0.287 | 72 | 0.015 | * |
-| 0 | +0.400 | 70 | 0.00061 | *** |
-| 1 | +0.445 | 69 | 0.00013 | *** |
-| 3 | +0.482 | 67 | 3.6e-05 | *** |
-| 6 | +0.528 | 64 | 7.4e-06 | *** |
-| 9 | +0.572 | 61 | 1.4e-06 | *** |
-| 12 | +0.679 | 58 | 4.8e-09 | *** |
-| 15 | +0.642 | 55 | 1.3e-07 | *** |
-| 18 | +0.595 | 52 | 3.3e-06 | *** |
+| FEWS commodity | source | USDA | best lag | r | n | p | sig |
+|---|---|---|---:|---:|---:|---:|---|
+| Rice (4% Broken) | Import | rice | +0 | +0.935 | 72 | 2.6e-33 | *** |
+| Spaghetti (Gourmet) | Import | wheat | +1 | +0.840 | 79 | 3.7e-22 | *** |
+| Wheat Grain | Local | wheat | +9 | +0.771 | 130 | 8.1e-27 | *** |
+| Milk (Bongu) | Import | milk | +12 | +0.698 | 130 | 2.8e-20 | *** |
+| Refined Vegetable Oil | Import | soybeans | +6 | +0.654 | 177 | 5.7e-23 | *** |
+| Wheat Flour | Import | wheat | +9 | +0.649 | 177 | 1.5e-22 | *** |
+| Maize Grain (Yellow) | Local | corn | -3 | +0.620 | 147 | 5.7e-17 | *** |
+| Maize Meal (Gradoro) | Import | corn | +6 | +0.613 | 59 | 2.5e-07 | *** |
+| Beans (Black) | Local | beans_dry_edible | +9 | +0.562 | 64 | 1.3e-06 | *** |
+| Beans (Red) | Local | beans_dry_edible | +18 | +0.505 | 55 | 8.3e-05 | *** |
+| Maize Meal | Local | corn | -3 | +0.501 | 151 | 5.8e-11 | *** |
+| Beans (Pinto) | Import | beans_dry_edible | +9 | +0.443 | 64 | 0.00025 | *** |
+| Beans (Lima) | Local | beans_dry_edible | +18 | +0.404 | 53 | 0.0027 | ** |
+| Rice (Milled) | Local | rice | +1 | -0.264 | 74 | 0.023 | * |
+| Sorghum | Local | sorghum | -6 | +0.156 | 74 | 0.18 |  |
 
 ## Plots
 
-- ![Lag scan, raw returns](plots/01_lag_scan_returns.png)
-- ![Lag scan, deseasonalized returns](plots/02_lag_scan_returns_deseasonalized.png)
-- ![Level overlay](plots/03_overlay_levels.png)
-- ![Scatter at best lag (t-1)](plots/04_scatter_best_lag.png)
+- ![Summary heatmap (deseasonalized returns)](plots/summary_heatmap.png)
+- One `lag_scan_<pair>.png` per pair (4-panel: levels/returns × raw/deseasonalized)
+- One `overlay_<pair>.png` per pair (level overlay since 2019, dual axis)
 
 ## Caveats
 
-- USDA series is the **aggregate** dry-edible-bean class (Black + Pinto +
-  Navy + Kidney + ...). Black beans are ~10-15% of US production by volume,
-  so this is a noisy proxy for what we'd ideally have (Black-specific).
-- USDA reports US producer prices; FEWS is Haitian retail. The supply
-  chain (US export -> import -> Haitian retail markup) is multi-step.
-- Coverage is short (since 2019). Power is limited; CIs are wide.
-- n ~ 70 vs r = 0.30 has p ~ 0.01, so the chosen threshold is roughly
-  the bar for 'significant at 1%'.
+- USDA `BEANS, DRY EDIBLE, (EXCL CHICKPEAS)` is the aggregate dry-bean
+  class (Black + Pinto + Navy + Kidney + ...). Black-specific FEWS prices
+  are paired against this aggregate. Multiple FEWS bean variants share
+  the same USDA series.
+- Sugar uses sugarcane producer-price (the dominant raw-cane series).
+  FEWS measures refined retail; the supply chain is multi-step.
+- Vegetable oil pairs against SOYBEAN producer price (US oils are mostly
+  soybean by volume) rather than a direct refined-oil price.
+- All USDA series are US-producer prices; FEWS is Haitian retail. Each
+  pair therefore measures a global producer-price signal against a
+  country-level retail signal with import + markup steps in between.
+- Coverage windows differ by USDA series. Check `n` in best_lags.csv before
+  acting on a marginal pair.
+- Reported p-values assume independence — they ignore autocorrelation in
+  the residuals so the true p is somewhat larger. Treat as a sanity
+  signal, not a statistical test.
