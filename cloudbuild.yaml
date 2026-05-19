@@ -3,13 +3,13 @@ steps:
     args:
       - build
       - -t
-      - gcr.io/$PROJECT_ID/haiti-food-price-monitor:$COMMIT_SHA
+      - gcr.io/$PROJECT_ID/haiti-food-price-monitor:$BUILD_ID
       - -t
       - gcr.io/$PROJECT_ID/haiti-food-price-monitor:latest
       - .
 
   - name: gcr.io/cloud-builders/docker
-    args: [push, gcr.io/$PROJECT_ID/haiti-food-price-monitor:$COMMIT_SHA]
+    args: [push, gcr.io/$PROJECT_ID/haiti-food-price-monitor:$BUILD_ID]
 
   - name: gcr.io/cloud-builders/docker
     args: [push, gcr.io/$PROJECT_ID/haiti-food-price-monitor:latest]
@@ -20,16 +20,24 @@ steps:
       - run
       - deploy
       - haiti-food-price-monitor
-      - --image=gcr.io/$PROJECT_ID/haiti-food-price-monitor:$COMMIT_SHA
+      - --image=gcr.io/$PROJECT_ID/haiti-food-price-monitor:$BUILD_ID
       - --region=us-central1
       - --platform=managed
       - --max-instances=1
       - --concurrency=10
       - --cpu=1
       - --memory=2Gi
+      # GCS_BUCKET is what makes user-triggered "Update Data & Models" survive
+      # container restarts — without it the DuckDB in /tmp is ephemeral and
+      # every cold start re-pulls FEWS from scratch. Mirror what the ACLED job
+      # uses in cloudbuild.acled-job.yaml.
+      - --set-env-vars=GCS_BUCKET=${_GCS_BUCKET},GCS_BLOB_NAME=fews_haiti.duckdb,FEWS_DB_PATH=/tmp/fews_haiti.duckdb
+
+substitutions:
+  _GCS_BUCKET: haiti-fews-mmann1123-haiti-fews
 
 images:
-  - gcr.io/$PROJECT_ID/haiti-food-price-monitor:$COMMIT_SHA
+  - gcr.io/$PROJECT_ID/haiti-food-price-monitor:$BUILD_ID
   - gcr.io/$PROJECT_ID/haiti-food-price-monitor:latest
 
 options:

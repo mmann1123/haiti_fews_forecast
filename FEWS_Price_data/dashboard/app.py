@@ -15,7 +15,9 @@ Deploy to Streamlit Cloud:
 import os
 import re
 import sys
+import traceback
 import xml.etree.ElementTree as ET
+from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
 
 import streamlit as st
@@ -47,6 +49,15 @@ DB_PATH = Path(os.getenv("FEWS_DB_PATH", FEWS_ROOT / "database" / "fews_haiti.du
 # GCS-backed persistence (only active when GCS_BUCKET is set)
 GCS_BUCKET = os.getenv("GCS_BUCKET")
 GCS_BLOB_NAME = os.getenv("GCS_BLOB_NAME", "fews_haiti.duckdb")
+
+# FEWS NET publishes monthly survey data with roughly a 2-3 month lag (median
+# ~80 days from period_date to availability — measured in the WB vs FEWS
+# comparison experiment). We use this to gate the Update button: if we already
+# hold a period_date newer than (today - lag), polling the API again is futile.
+FEWS_RELEASE_LAG_DAYS = 80
+# Minimum gap between user-triggered API hits, even when data could plausibly
+# be new. Stops accidental double-clicks from re-pulling.
+MIN_REFRESH_INTERVAL = timedelta(hours=24)
 
 # Add parent directory so we can import sync modules
 if str(FEWS_ROOT) not in sys.path:
@@ -186,12 +197,31 @@ def _bootstrap_db_from_gcs() -> None:
 
 
 def _push_db_to_gcs() -> None:
-    """Upload the local DuckDB file back to GCS so synced data persists."""
+    """Checkpoint DuckDB to the main file, then upload it to GCS.
+
+    The CHECKPOINT step is critical: writes from `_incremental_sync` go into
+    `fews_haiti.duckdb.wal` first, and only the main `.duckdb` file is what we
+    upload. Without an explicit checkpoint, the upload sends pre-write bytes
+    and the user's changes are silently lost on the next container start.
+    """
     if not GCS_BUCKET:
         return
     from database.gcs_sync import upload_db_to_gcs
 
+    # Flush WAL into the main file before reading it for upload.
+    try:
+        get_connection().execute("CHECKPOINT")
+    except Exception as exc:
+        # If checkpoint fails we still try the upload — it's better to send a
+        # stale snapshot than skip entirely — but record the failure.
+        print(
+            f"[WARN] DuckDB CHECKPOINT failed before GCS upload: {exc!r}",
+            file=sys.stderr,
+            flush=True,
+        )
+
     upload_db_to_gcs(DB_PATH, GCS_BUCKET, GCS_BLOB_NAME)
+    st.session_state["last_gcs_upload_at"] = datetime.now(timezone.utc)
 
 
 _bootstrap_db_from_gcs()
@@ -213,6 +243,12 @@ if _db_needs_init():
     try:
         _push_db_to_gcs()
     except Exception as exc:
+        print(
+            f"[ERROR] GCS upload after seed failed: {exc!r}",
+            file=sys.stderr,
+            flush=True,
+        )
+        traceback.print_exc(file=sys.stderr)
         st.warning(f"Could not upload seeded DB to GCS: {exc}")
     st.cache_data.clear()
 
@@ -410,12 +446,130 @@ def calculate_statistics(df: pd.DataFrame, price_col: str) -> dict:
     return stats
 
 
+@st.cache_data(ttl=600)
+def _get_data_freshness() -> dict:
+    """Return data-freshness state for the sidebar gate.
+
+    - latest_period_date: max(period_date) in price_observations (the data
+      itself, which advances when FEWS publishes a new month).
+    - last_import_at: timestamp of the most recent successful import_log entry
+      (when the API was last polled).
+    """
+    con = get_connection()
+    latest = con.execute(
+        "SELECT MAX(period_date) FROM price_observations"
+    ).fetchone()[0]
+    last_import = con.execute(
+        """
+        SELECT MAX(import_date)
+        FROM import_log
+        WHERE status = 'success'
+        """
+    ).fetchone()[0]
+    return {
+        "latest_period_date": latest,
+        "last_import_at": last_import,
+    }
+
+
+def _next_expected_release(latest_period_date) -> "datetime | None":
+    """Best-guess date the *next* FEWS release should appear.
+
+    FEWS publishes month M's data ~80 days after month-end M. Given the latest
+    period_date we hold (which is month-end), the next month's data should land
+    around (latest_period_date + 1 month + lag).
+    """
+    if latest_period_date is None:
+        return None
+    # latest_period_date is a date or datetime; treat the next month as +31 days
+    # for the rough estimate (we only care about week-level precision).
+    return latest_period_date + timedelta(days=31 + FEWS_RELEASE_LAG_DAYS)
+
+
+def _refresh_is_futile(freshness: dict) -> tuple[bool, str]:
+    """Decide if clicking Update right now is wasted work.
+
+    Returns (futile, reason_text). When futile=True, the reason explains why
+    so we can show it in the button tooltip and on the gate label.
+    """
+    latest = freshness.get("latest_period_date")
+    last_import = freshness.get("last_import_at")
+    now = datetime.now(timezone.utc)
+
+    if latest is None:
+        return False, "No data yet — sync needed."
+
+    # If we already hold a period_date close enough to today that the next
+    # FEWS release is still in the future, polling won't return anything new.
+    age_days = (now.date() - latest).days
+    next_release = _next_expected_release(latest)
+    if age_days < FEWS_RELEASE_LAG_DAYS:
+        msg = (
+            f"FEWS publishes with a ~{FEWS_RELEASE_LAG_DAYS}-day lag. "
+            f"Latest month in DB: {latest}. "
+            f"Next release expected ~{next_release if next_release else 'unknown'}."
+        )
+        return True, msg
+
+    # Even if FEWS could plausibly have new data, throttle accidental rapid clicks.
+    if last_import is not None:
+        # DuckDB returns naive timestamps; treat as UTC.
+        if last_import.tzinfo is None:
+            last_import = last_import.replace(tzinfo=timezone.utc)
+        if now - last_import < MIN_REFRESH_INTERVAL:
+            mins = int((now - last_import).total_seconds() // 60)
+            return True, (
+                f"Last API check ran {mins} min ago. "
+                f"Refreshes are rate-limited to once per "
+                f"{int(MIN_REFRESH_INTERVAL.total_seconds() // 3600)}h."
+            )
+
+    return False, f"FEWS may have a new release (latest month in DB: {latest})."
+
+
+def _render_sidebar_status(freshness: dict) -> None:
+    """Persistent GCS + freshness banner at the top of the sidebar."""
+    if GCS_BUCKET:
+        last_upload = st.session_state.get("last_gcs_upload_at")
+        upload_note = (
+            f"  \nLast upload: {last_upload.strftime('%Y-%m-%d %H:%M UTC')}"
+            if last_upload
+            else ""
+        )
+        st.sidebar.success(
+            f"GCS persistence ON  \n`gs://{GCS_BUCKET}/{GCS_BLOB_NAME}`{upload_note}"
+        )
+    else:
+        st.sidebar.error(
+            "GCS persistence is OFF — updates will be lost on container "
+            "restart. Set the `GCS_BUCKET` env var on the Cloud Run service."
+        )
+
+    latest = freshness.get("latest_period_date")
+    last_import = freshness.get("last_import_at")
+    next_release = _next_expected_release(latest)
+    lines = []
+    if latest:
+        lines.append(f"**Latest data point:** {latest}")
+    if next_release:
+        lines.append(f"**Next FEWS release ~** {next_release}")
+    if last_import:
+        if last_import.tzinfo is None:
+            last_import = last_import.replace(tzinfo=timezone.utc)
+        age_h = (datetime.now(timezone.utc) - last_import).total_seconds() / 3600
+        lines.append(f"**Last refresh check:** {age_h:.1f}h ago")
+    if lines:
+        st.sidebar.info("  \n".join(lines))
+
+
 def main():
     # Header
     st.title("🌾 Haiti Food Price Monitor")
 
     # Sidebar controls
     st.sidebar.header("Settings")
+    freshness = _get_data_freshness()
+    _render_sidebar_status(freshness)
 
     # Commodity selector
     commodities = get_commodities()
@@ -443,9 +597,24 @@ def main():
         key="date_range",
     )
 
+    futile, futile_reason = _refresh_is_futile(freshness)
+    if futile:
+        st.sidebar.caption(futile_reason)
+    force_refresh = False
+    if futile:
+        force_refresh = st.sidebar.checkbox(
+            "Force refresh anyway",
+            value=False,
+            help="Hit the FEWS NET API even though no new data is expected.",
+        )
     sidebar_refresh = st.sidebar.button(
         "🔄 Update Data & Models",
-        help="Download latest FEWS NET data, then re-train Prophet models",
+        help=(
+            futile_reason
+            if futile and not force_refresh
+            else "Download latest FEWS NET data, then re-train Prophet models."
+        ),
+        disabled=futile and not force_refresh,
     )
     if sidebar_refresh:
         with st.spinner("Downloading latest data from FEWS NET..."):
@@ -460,6 +629,12 @@ def main():
         try:
             _push_db_to_gcs()
         except Exception as exc:
+            print(
+                f"[ERROR] GCS upload after sidebar sync failed: {exc!r}",
+                file=sys.stderr,
+                flush=True,
+            )
+            traceback.print_exc(file=sys.stderr)
             st.sidebar.warning(f"Sync saved locally but GCS upload failed: {exc}")
         st.session_state.forecast_models = {}
         st.cache_data.clear()
