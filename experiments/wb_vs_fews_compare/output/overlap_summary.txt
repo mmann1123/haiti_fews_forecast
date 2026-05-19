@@ -1,0 +1,125 @@
+== Commodity mapping ==
+  WB beans_fao    -> FEWS Beans (Black) (Local, 6_lb): FEWS n= 2540  WB n= 2029
+  WB maize_meal   -> FEWS Maize Meal (Local, 6_lb): FEWS n= 2540  WB n= 2138
+  WB oil          -> FEWS Refined Vegetable Oil (Import, gal): FEWS n= 2540  WB n= 1415
+  WB pasta        -> FEWS Spaghetti (Gourmet) (Import, 350_g): FEWS n= 2540  WB n=  731
+  WB rice         -> FEWS Rice (Milled) (Local, 6_lb): FEWS n= 2540  WB n= 1405
+  WB rice_fao     -> FEWS Rice (4% Broken) (Import, 6_lb): FEWS n= 2540  WB n= 1504
+  WB sorghum_fao  -> FEWS Sorghum (Local, 6_lb): FEWS n= 2540  WB n= 1799
+  WB sugar        -> FEWS Refined sugar (Import, 6_lb): FEWS n= 2540  WB n=  934
+  WB wheat_fao    -> FEWS Wheat Grain (Local, 6_lb): FEWS n= 1316  WB n=  903
+  WB wheat_flour  -> FEWS Wheat Flour (Import, 6_lb): FEWS n= 2540  WB n= 2160
+
+== Market mapping (9 of 13 WB markets in FEWS) ==
+  WB 'Cap-Haitien'            -> FEWS 'Cap Haitien'
+  WB 'Cayes'                  -> FEWS 'Cayes'
+  WB 'Gonaives'               -> FEWS 'Gonaives'
+  WB 'Hinche'                 -> FEWS 'Hinche'
+  WB 'Jacmel'                 -> FEWS 'Jacmel'
+  WB 'Jeremie'                -> FEWS 'Jeremie'
+  WB 'Ouanaminthe'            -> FEWS 'Ouanaminthe'
+  WB 'Port-au-Prince'         -> FEWS 'Port-au-Prince, Croix-de-Bossales'
+  WB 'Port-de-Paix'           -> FEWS 'Port-de-Paix'
+
+WB-only markets:   ['Marche Previle', 'Marche de Jeremie', 'Marche de Leon', 'Market Average']
+FEWS-only markets: ['Fond-des-Negres']
+
+== Median correlation by commodity (across overlapping markets) ==
+             n_pairs  median_r_levels  median_r_returns  median_n_months  mean_ratio
+cm_name                                                                             
+wheat_fao          6         0.999787          0.982594            128.0    1.002042
+beans_fao          9         0.999559          0.964998            224.0    1.001486
+sorghum_fao        9         0.999532          0.954696            207.0    1.002086
+maize_meal         9         0.998393          0.920480            220.0    0.998509
+wheat_flour        9         0.998258          0.869949            223.0    1.002203
+sugar              9         0.994101          0.750569            102.0    1.006642
+pasta              9         0.989539          0.716997             72.0    0.982236
+oil                9         0.982331          0.477005            139.0    1.054266
+rice               9         0.955470          0.327235            168.0    0.587942
+rice_fao           6         0.950913          0.400408            197.0    1.996719
+
+== Per-pair correlation (n_months >= 24) ==
+     wb_market     cm_name  n_months  fews_mean    wb_mean  ratio_wb_over_fews  r_levels  r_logreturns
+   Cap-Haitien   beans_fao       224 435.013579 435.545759            1.001223  0.999559      0.965285
+         Cayes   beans_fao       147 478.816383 478.297619            0.998917  0.997187      0.877110
+      Gonaives   beans_fao       147 516.477211 517.400272            1.001787  0.997564      0.812201
+        Hinche   beans_fao       224 412.359077 413.266786            1.002201  0.999676      0.964998
+        Jacmel   beans_fao       224 443.019643 443.514732            1.001118  0.999903      0.976970
+       Jeremie   beans_fao       224 393.888207 394.827723            1.002385  0.998841      0.953428
+   Ouanaminthe   beans_fao       222 497.268844 497.616667            1.000699  0.999932      0.977178
+Port-au-Prince   beans_fao       224 396.495536 397.469866            1.002457  0.999648      0.974755
+  Port-de-Paix   beans_fao       148 527.824324 529.187297            1.002582  0.998144      0.867105
+   Cap-Haitien  maize_meal       224 217.085863 218.790938            1.007854  0.993932      0.817277
+         Cayes  maize_meal       208 149.164663 149.003462            0.998919  0.987540      0.852643
+      Gonaives  maize_meal       184 172.473347 171.278315            0.993071  0.998393      0.928876
+        Hinche  maize_meal       224 166.421652 165.559911            0.994822  0.999237      0.948107
+        Jacmel  maize_meal       223 194.847085 194.480404            0.998118  0.998626      0.934566
+       Jeremie  maize_meal       220 123.697178 124.392227            1.005619  0.993650      0.871331
+   Ouanaminthe  maize_meal       201 149.144341 148.420050            0.995144  0.999433      0.959531
+Port-au-Prince  maize_meal       224 165.413092 164.932723            0.997096  0.996665      0.813753
+  Port-de-Paix  maize_meal       178 180.214888 179.482697            0.995937  0.999119      0.920480
+   Cap-Haitien         oil       156 749.482372 771.466346            1.029332  0.985954      0.520792
+         Cayes         oil       142 813.080528 817.724296            1.005711  0.993787      0.616401
+      Gonaives         oil       131 648.243003 743.804656            1.147416  0.981259      0.691166
+        Hinche         oil       118 640.039725 771.005339            1.204621  0.948157      0.477005
+        Jacmel         oil       110 590.548182 599.628818            1.015377  0.968873      0.302018
+       Jeremie         oil       156 851.131859 848.045513            0.996374  0.994242      0.532419
+   Ouanaminthe         oil       135 872.559259 890.688593            1.020777  0.990261      0.472536
+Port-au-Prince         oil       156 758.056090 801.063397            1.056734  0.982331      0.341049
+  Port-de-Paix         oil       139 709.849640 718.406331            1.012054  0.960680      0.432631
+   Cap-Haitien       pasta        95  54.439763  54.224737            0.996050  0.997992      0.717645
+         Cayes       pasta        57  31.910088  30.507544            0.956047  0.957085      0.716997
+      Gonaives       pasta        36  20.618056  21.166667            1.026608  0.909793      0.271472
+        Jacmel       pasta        62  33.044355  31.451613            0.951800  0.852691      0.364947
+       Jeremie       pasta        91  52.598489  53.375604            1.014774  0.989539      0.780741
+   Ouanaminthe       pasta        95  55.129474  54.807368            0.994157  0.998069      0.653882
+Port-au-Prince       pasta        95  55.907061  55.752842            0.997242  0.995364      0.866879
+  Port-de-Paix       pasta        72  38.855903  38.570000            0.992642  0.997626      0.836137
+   Cap-Haitien        rice        67 250.653483 209.935373            0.837552  0.891770      0.578232
+         Cayes        rice       108 439.983796 215.622685            0.490070  0.971140      0.384961
+      Gonaives        rice       175 425.181429 236.791257            0.556918  0.955470      0.069538
+        Hinche        rice       200 497.413542 243.771350            0.490078  0.975196      0.031831
+        Jacmel        rice       203 525.406404 255.553941            0.486393  0.945079      0.208356
+       Jeremie        rice       168 378.672545 175.008095            0.462162  0.938501      0.327235
+   Ouanaminthe        rice       127 232.354331 156.393228            0.673081  0.659363      0.221835
+Port-au-Prince        rice       186 452.290323 233.746344            0.516806  0.970286      0.336606
+  Port-de-Paix        rice        41 355.329268 276.595122            0.778419  0.961167      0.777280
+   Cap-Haitien    rice_fao       221 246.610558 478.999864            1.942333  0.953552      0.350196
+        Hinche    rice_fao       149 208.768121 460.997987            2.208182  0.987676      0.461608
+        Jacmel    rice_fao       220 257.050455 549.873864            2.139167  0.948273      0.239201
+       Jeremie    rice_fao       147 171.059184 371.812993            2.173593  0.815439      0.511525
+   Ouanaminthe    rice_fao       190 222.757500 334.465737            1.501479  0.922149      0.450620
+Port-au-Prince    rice_fao       204 244.616258 493.039265            2.015562  0.967874      0.317589
+   Cap-Haitien sorghum_fao       222 313.984384 315.419144            1.004570  0.999292      0.954696
+         Cayes sorghum_fao       107 395.211815 398.182523            1.007517  0.988965      0.649154
+      Gonaives sorghum_fao       107 359.142991 360.452897            1.003647  0.997395      0.634180
+        Hinche sorghum_fao       207 255.075684 255.256135            1.000707  0.999775      0.918350
+        Jacmel sorghum_fao       222 332.864865 332.780180            0.999746  0.999532      0.970012
+       Jeremie sorghum_fao       222 233.715034 233.741486            1.000113  0.999914      0.977943
+   Ouanaminthe sorghum_fao       124 225.426747 225.573548            1.000651  0.999990      0.996070
+Port-au-Prince sorghum_fao       224 268.812872 269.276116            1.001723  0.999893      0.977912
+  Port-de-Paix sorghum_fao       108 358.683642 358.718333            1.000097  0.997331      0.870566
+   Cap-Haitien       sugar       102 375.745098 379.310980            1.009490  0.995326      0.747544
+         Cayes       sugar        34 249.343137 264.815882            1.062054  0.656633      0.700207
+      Gonaives       sugar       101 397.861386 395.431485            0.993893  0.994101      0.780324
+        Hinche       sugar       102 557.162990 557.279216            1.000209  0.992023      0.573256
+        Jacmel       sugar       102 436.933456 436.832843            0.999770  0.998175      0.750569
+       Jeremie       sugar        97 477.683076 477.686598            1.000007  0.998341      0.640573
+   Ouanaminthe       sugar       102 483.432500 482.963039            0.999029  0.999127      0.898936
+Port-au-Prince       sugar        77 247.405411 246.836623            0.997701  0.993030      0.854900
+  Port-de-Paix       sugar       102 498.031863 496.847647            0.997622  0.991663      0.779237
+   Cap-Haitien   wheat_fao       128 366.540137 367.535625            1.002716  0.999712      0.992726
+        Hinche   wheat_fao       128 388.415527 388.765547            1.000901  0.999871      0.985701
+        Jacmel   wheat_fao       128 427.714844 428.540391            1.001930  0.999717      0.980242
+       Jeremie   wheat_fao       128 437.758770 438.794141            1.002365  0.999724      0.962501
+   Ouanaminthe   wheat_fao       128 354.211380 355.042109            1.002345  0.999850      0.960127
+Port-au-Prince   wheat_fao       128 368.837891 369.574375            1.001997  0.999884      0.984946
+   Cap-Haitien wheat_flour       223 235.120105 233.091480            0.991372  0.994088      0.776811
+         Cayes wheat_flour       207 175.294787 177.044300            1.009980  0.992659      0.851354
+      Gonaives wheat_flour       184 175.649117 176.354293            1.004015  0.998869      0.903406
+        Hinche wheat_flour       224 168.573084 168.679107            1.000629  0.999577      0.962448
+        Jacmel wheat_flour       224 255.063839 253.922857            0.995527  0.996168      0.839781
+       Jeremie wheat_flour       224 176.700986 178.533884            1.010373  0.991420      0.869949
+   Ouanaminthe wheat_flour       223 228.431143 227.987489            0.998058  0.999337      0.776357
+Port-au-Prince wheat_flour       224 180.653274 181.968616            1.007281  0.998258      0.909455
+  Port-de-Paix wheat_flour       179 178.754749 179.217821            1.002591  0.998412      0.945397

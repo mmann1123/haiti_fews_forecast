@@ -27,10 +27,10 @@ DEFAULT_DB_PATH = Path(
 # Columns we expect from the WB release. Anything missing is filled with NULL
 # so schema drift in the upstream CSV doesn't break the upsert.
 EXPECTED_COLS = [
-    "iso3", "country", "adm0_id", "adm1_name",
-    "mkt_id", "mkt_name", "cm_id", "cm_name",
-    "cur_id", "currency", "pt_id", "price_type",
-    "um_id", "unit", "price_date", "price", "usdprice",
+    "iso3", "country", "adm1_name", "adm2_name",
+    "mkt_name", "lat", "lon",
+    "cm_name", "currency",
+    "price_date", "price", "o_price", "h_price", "l_price",
 ]
 
 
@@ -111,31 +111,31 @@ class WBRTFPDatabase:
         self.con.execute(
             """
             INSERT INTO wb_rtfp_prices (
-                iso3, country, adm0_id, adm1_name,
-                mkt_id, mkt_name, cm_id, cm_name,
-                cur_id, currency, pt_id, price_type,
-                um_id, unit, price_date, price, usdprice,
+                iso3, country, adm1_name, adm2_name,
+                mkt_name, lat, lon,
+                cm_name, currency,
+                price_date, price, o_price, h_price, l_price,
                 wb_release_date
             )
             SELECT
-                iso3, country, adm0_id, adm1_name,
-                mkt_id, mkt_name, cm_id, cm_name,
-                cur_id, currency, pt_id, price_type,
-                um_id, unit, price_date, price, usdprice,
+                iso3, country, adm1_name, adm2_name,
+                mkt_name, lat, lon,
+                cm_name, currency,
+                price_date, price, o_price, h_price, l_price,
                 wb_release_date
             FROM df_to_insert
-            ON CONFLICT (iso3, mkt_name, cm_name, unit, price_type, currency, price_date)
+            ON CONFLICT (iso3, mkt_name, cm_name, price_date)
             DO UPDATE SET
                 country         = EXCLUDED.country,
-                adm0_id         = EXCLUDED.adm0_id,
                 adm1_name       = EXCLUDED.adm1_name,
-                mkt_id          = EXCLUDED.mkt_id,
-                cm_id           = EXCLUDED.cm_id,
-                cur_id          = EXCLUDED.cur_id,
-                pt_id           = EXCLUDED.pt_id,
-                um_id           = EXCLUDED.um_id,
+                adm2_name       = EXCLUDED.adm2_name,
+                lat             = EXCLUDED.lat,
+                lon             = EXCLUDED.lon,
+                currency        = EXCLUDED.currency,
                 price           = EXCLUDED.price,
-                usdprice        = EXCLUDED.usdprice,
+                o_price         = EXCLUDED.o_price,
+                h_price         = EXCLUDED.h_price,
+                l_price         = EXCLUDED.l_price,
                 wb_release_date = EXCLUDED.wb_release_date,
                 imported_at     = now()
             """
@@ -166,14 +166,12 @@ class WBRTFPDatabase:
 
         out["iso3"] = out["iso3"].astype(str).str.upper()
         out["price_date"] = pd.to_datetime(out["price_date"], errors="coerce").dt.date
-        for num in ("adm0_id", "mkt_id", "cm_id", "cur_id", "pt_id", "um_id"):
-            out[num] = pd.to_numeric(out[num], errors="coerce").astype("Int64")
-        for num in ("price", "usdprice"):
+        for num in ("price", "o_price", "h_price", "l_price", "lat", "lon"):
             out[num] = pd.to_numeric(out[num], errors="coerce")
 
         out["wb_release_date"] = pd.to_datetime(release_date, errors="coerce").date()
 
-        out = out.dropna(subset=["price_date", "mkt_name", "cm_name"]).reset_index(drop=True)
+        out = out.dropna(subset=["price_date", "mkt_name", "cm_name", "price"]).reset_index(drop=True)
         return out[EXPECTED_COLS + ["wb_release_date"]]
 
     # ------------------------------------------------------------------

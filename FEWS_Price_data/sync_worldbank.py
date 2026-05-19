@@ -92,7 +92,7 @@ def cmd_sync(args) -> None:
             )
             return
 
-        df = client.download_country(url, iso3=ISO3)
+        df = client.download_country(url)
         if df.empty:
             print(f"[ERROR] WB release contains no {ISO3} rows; aborting")
             sys.exit(1)

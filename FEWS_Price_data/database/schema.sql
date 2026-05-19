@@ -188,24 +188,21 @@ CREATE TABLE IF NOT EXISTS wb_rtfp_prices (
     id INTEGER PRIMARY KEY DEFAULT nextval('seq_wb_rtfp_id'),
     iso3 VARCHAR NOT NULL,                  -- HTI for Haiti
     country VARCHAR,
-    adm0_id INTEGER,
     adm1_name VARCHAR,
-    mkt_id INTEGER,
+    adm2_name VARCHAR,
     mkt_name VARCHAR NOT NULL,
-    cm_id INTEGER,                          -- WB commodity id
-    cm_name VARCHAR NOT NULL,               -- commodity (Rice, Maize, ...)
-    cur_id INTEGER,
-    currency VARCHAR,                       -- e.g. HTG, USD
-    pt_id INTEGER,
-    price_type VARCHAR,                     -- Retail / Wholesale / etc.
-    um_id INTEGER,
-    unit VARCHAR,                           -- e.g. KG, 6_lb
+    lat DOUBLE,
+    lon DOUBLE,
+    cm_name VARCHAR NOT NULL,               -- WB commodity slug (rice, beans_fao, ...)
+    currency VARCHAR,                       -- HTG for Haiti
     price_date DATE NOT NULL,
-    price DOUBLE,                           -- local-currency price
-    usdprice DOUBLE,                        -- USD-converted price (if provided)
+    price DOUBLE,                           -- close (== bare commodity column)
+    o_price DOUBLE,                         -- open
+    h_price DOUBLE,                         -- high
+    l_price DOUBLE,                         -- low
     wb_release_date DATE,                   -- version of the release this row came from
     imported_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(iso3, mkt_name, cm_name, unit, price_type, currency, price_date)
+    UNIQUE(iso3, mkt_name, cm_name, price_date)
 );
 CREATE INDEX IF NOT EXISTS idx_wb_rtfp_date   ON wb_rtfp_prices(price_date);
 CREATE INDEX IF NOT EXISTS idx_wb_rtfp_market ON wb_rtfp_prices(mkt_name);
