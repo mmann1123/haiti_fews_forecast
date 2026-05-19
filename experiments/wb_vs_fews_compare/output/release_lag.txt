@@ -1,0 +1,25 @@
+== Release / data lag (today = 2026-05-19) ==
+
+WB RTFP (Haiti, catalog 4494)
+  Release version date:  2026-04-27
+  Latest data point:     2026-02-01
+  Data lag at release:   2 months
+  Days since release:    22
+  Data lag vs today:     107 days
+
+FEWS NET
+  Latest data point:     2026-02-28
+  Latest import_log run: 2026-04-30 15:57:07.146772
+  Data lag vs today:     80 days
+
+Latest data point per commodity:
+  beans_fao     WB last: 2026-02-01   FEWS last: 2026-02-28
+  maize_meal    WB last: 2026-02-01   FEWS last: 2026-02-28
+  oil           WB last: 2026-02-01   FEWS last: 2026-02-28
+  pasta         WB last: 2024-12-01   FEWS last: 2026-02-28
+  rice          WB last: 2024-12-01   FEWS last: 2026-02-28
+  rice_fao      WB last: 2026-02-01   FEWS last: 2026-02-28
+  sorghum_fao   WB last: 2026-02-01   FEWS last: 2026-02-28
+  sugar         WB last: 2024-12-01   FEWS last: 2026-02-28
+  wheat_fao     WB last: 2026-02-01   FEWS last: 2026-02-28
+  wheat_flour   WB last: 2026-02-01   FEWS last: 2026-02-28
