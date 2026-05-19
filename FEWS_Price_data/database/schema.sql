@@ -176,6 +176,52 @@ CREATE TABLE IF NOT EXISTS acled_features_market (
 );
 
 -- ============================================================
+-- WORLD BANK RTFP (Real-Time Food Prices, catalog 4494)
+-- ============================================================
+-- WB re-publishes the full panel each release and back-fills prior months when
+-- its modeled prices update. We store one row per (market, commodity, date)
+-- and upsert on every sync so revisions overwrite older values.
+
+CREATE SEQUENCE IF NOT EXISTS seq_wb_rtfp_id START 1;
+
+CREATE TABLE IF NOT EXISTS wb_rtfp_prices (
+    id INTEGER PRIMARY KEY DEFAULT nextval('seq_wb_rtfp_id'),
+    iso3 VARCHAR NOT NULL,                  -- HTI for Haiti
+    country VARCHAR,
+    adm0_id INTEGER,
+    adm1_name VARCHAR,
+    mkt_id INTEGER,
+    mkt_name VARCHAR NOT NULL,
+    cm_id INTEGER,                          -- WB commodity id
+    cm_name VARCHAR NOT NULL,               -- commodity (Rice, Maize, ...)
+    cur_id INTEGER,
+    currency VARCHAR,                       -- e.g. HTG, USD
+    pt_id INTEGER,
+    price_type VARCHAR,                     -- Retail / Wholesale / etc.
+    um_id INTEGER,
+    unit VARCHAR,                           -- e.g. KG, 6_lb
+    price_date DATE NOT NULL,
+    price DOUBLE,                           -- local-currency price
+    usdprice DOUBLE,                        -- USD-converted price (if provided)
+    wb_release_date DATE,                   -- version of the release this row came from
+    imported_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(iso3, mkt_name, cm_name, unit, price_type, currency, price_date)
+);
+CREATE INDEX IF NOT EXISTS idx_wb_rtfp_date   ON wb_rtfp_prices(price_date);
+CREATE INDEX IF NOT EXISTS idx_wb_rtfp_market ON wb_rtfp_prices(mkt_name);
+CREATE INDEX IF NOT EXISTS idx_wb_rtfp_cm     ON wb_rtfp_prices(cm_name);
+
+-- Tracks the last WB release we ingested so the orchestrator can short-circuit
+-- when the catalog version date hasn't moved.
+CREATE TABLE IF NOT EXISTS wb_rtfp_release_log (
+    release_date DATE PRIMARY KEY,          -- YYYY-MM-DD parsed from release title
+    release_title VARCHAR,
+    download_url VARCHAR,
+    rows_ingested INTEGER,
+    ingested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ============================================================
 -- VIEWS (Optional convenience views)
 -- ============================================================
 
