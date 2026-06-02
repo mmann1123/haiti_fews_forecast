@@ -50,11 +50,16 @@ DB_PATH = Path(os.getenv("FEWS_DB_PATH", FEWS_ROOT / "database" / "fews_haiti.du
 GCS_BUCKET = os.getenv("GCS_BUCKET")
 GCS_BLOB_NAME = os.getenv("GCS_BLOB_NAME", "fews_haiti.duckdb")
 
-# FEWS NET publishes monthly survey data with roughly a 2-3 month lag (median
-# ~80 days from period_date to availability — measured in the WB vs FEWS
-# comparison experiment). We use this to gate the Update button: if we already
-# hold a period_date newer than (today - lag), polling the API again is futile.
-FEWS_RELEASE_LAG_DAYS = 80
+# FEWS NET publishes monthly survey data with a typical 30-45 day lag from
+# month-end to availability. Measured directly from this DB's import_log:
+# Mar 2026 data (period_date 2026-03-31) appeared between 2026-03-23 and
+# 2026-05-19 polls — so lag <= 49 days. Cross-referenced with WB RTFP's
+# 2026-04-27 release containing Feb 2026 data, FEWS had Feb 2026 by ~58
+# days post-month-end at the latest (likely sooner — WB lags FEWS slightly).
+# We use this to gate the Update button: if we already hold a period_date
+# newer than (today - lag), polling the API again is futile. 45 is a safe
+# midpoint that won't suppress legitimate refreshes once a new month lands.
+FEWS_RELEASE_LAG_DAYS = 45
 # Minimum gap between user-triggered API hits, even when data could plausibly
 # be new. Stops accidental double-clicks from re-pulling.
 MIN_REFRESH_INTERVAL = timedelta(hours=24)

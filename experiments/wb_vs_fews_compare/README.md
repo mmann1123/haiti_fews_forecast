@@ -110,17 +110,32 @@ across the 9 overlapping markets.
 
 Today = 2026-05-19.
 
-| Source | Latest data point | Released / synced | Data lag vs today |
-|--------|-------------------|-------------------|-------------------|
-| WB RTFP | 2026-02-01 (Feb)  | 2026-04-27 (file version) | 107 days |
-| FEWS NET | 2026-02-28 (Feb)  | 2026-04-30 (last sync) | 80 days |
+| Source   | Latest data point | Released / synced         | "Days vs today" (snapshot) |
+|----------|-------------------|---------------------------|---------------------------:|
+| WB RTFP  | 2026-02-01 (Feb)  | 2026-04-27 (file version) |                        107 |
+| FEWS NET | 2026-02-28 (Feb)  | 2026-04-30 (last sync)    |                         80 |
 
-- **Release cadence and data lag are essentially the same**: both publish
-  with a ~2–3 month gap from latest data point to release date, and both
-  currently have Feb 2026 as the latest observation.
+⚠ **"Days vs today" is a snapshot of our local copy, not FEWS's release
+cadence.** Read below for the actual lag.
+
+Measured release lag (how long after month-end does data become public):
+
+- **FEWS NET** appears to publish each month's data **within ~30-45 days**
+  of month-end. Evidence: in our `import_log`, March 2026 data (period
+  end 2026-03-31) was visible by 2026-05-19, an upper bound of 49 days.
+  WB RTFP's 2026-04-27 release (which ingests FEWS as input) already
+  contained Feb 2026 — putting FEWS's Feb 2026 release at no later than
+  ~58 days post-month-end, likely earlier. The 80-day snapshot above
+  reflects that the local DB hadn't been refreshed since 2026-04-30,
+  not that FEWS itself takes 80 days.
+- **WB RTFP** clearly lags FEWS by a few days (its model needs FEWS as
+  input, then runs its own processing). Their release version date sits
+  ~2 months after the latest period the file contains, which is
+  consistent with FEWS's ~30-45 day lag plus WB's own modelling delay.
+
 - WB uses month-start dates (2026-02-01) and FEWS uses month-end
-  (2026-02-28), so the 27-day difference in "days vs today" is a labelling
-  artifact, not a real lag difference.
+  (2026-02-28), so the 27-day "snapshot" difference is a labelling
+  artifact, not a real cadence difference.
 - **Commodity-level exception:** WB's `pasta`, `rice`, and `sugar` series
   last updated at **2024-12-01** — those feeds have effectively been
   dropped from the model. FEWS still ships all three through 2026-02. If
