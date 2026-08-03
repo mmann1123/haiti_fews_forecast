@@ -28,6 +28,7 @@ import plotly.graph_objects as go
 import requests
 from pathlib import Path
 from forecasting import fit_all_models, generate_all_forecasts, ForecastResult
+import queries
 
 FEWS_HAITI_FEED_URL = "https://fews.net/taxonomy/term/514/feed"
 FEWS_GLOBAL_PRICE_WATCH_FEED_URL = "https://fews.net/taxonomy/term/15/feed"
@@ -297,50 +298,20 @@ def get_markets():
 
 @st.cache_data(ttl=3600)
 def get_mean_prices(commodity: str):
-    """Get mean price across all markets for a commodity."""
-    con = get_connection()
-    df = con.execute(
-        """
-        SELECT
-            po.period_date,
-            AVG(po.value) AS mean_price_htg,
-            AVG(po.common_currency_price) AS mean_price_usd,
-            MIN(po.value) AS min_price_htg,
-            MAX(po.value) AS max_price_htg,
-            COUNT(DISTINCT po.market_id) AS num_markets
-        FROM price_observations po
-        JOIN products p ON po.product_id = p.id
-        WHERE p.name = ?
-        GROUP BY po.period_date
-        ORDER BY po.period_date
-    """,
-        [commodity],
-    ).fetchdf()
-    df["period_date"] = pd.to_datetime(df["period_date"])
-    return df
+    """Get mean standardized price (per kg/L) across all markets for a commodity."""
+    return queries.mean_prices(get_connection(), commodity)
 
 
 @st.cache_data(ttl=3600)
 def get_market_prices(commodity: str):
-    """Get individual market prices for a commodity."""
-    con = get_connection()
-    df = con.execute(
-        """
-        SELECT
-            m.name AS market,
-            po.period_date,
-            po.value AS price_htg,
-            po.common_currency_price AS price_usd
-        FROM price_observations po
-        JOIN markets m ON po.market_id = m.id
-        JOIN products p ON po.product_id = p.id
-        WHERE p.name = ?
-        ORDER BY po.period_date, m.name
-    """,
-        [commodity],
-    ).fetchdf()
-    df["period_date"] = pd.to_datetime(df["period_date"])
-    return df
+    """Get individual market standardized prices (per kg/L) for a commodity."""
+    return queries.market_prices(get_connection(), commodity)
+
+
+@st.cache_data(ttl=3600)
+def get_common_unit(commodity: str) -> str:
+    """Get the common unit ('kg' or 'L') the commodity's prices are shown in."""
+    return queries.common_unit(get_connection(), commodity)
 
 
 @st.cache_data(ttl=3600)
@@ -591,6 +562,17 @@ def main():
     market_price_col = "price_usd" if use_usd else "price_htg"
     currency_symbol = "$" if use_usd else "HTG "
 
+    # All prices are standardized to a common unit (kg for weight-based
+    # commodities, L for liquids) rather than the native retail units FEWS NET
+    # reports (6 lb marmite, gallon, 350 g packet, ...).
+    common_unit = get_common_unit(selected_commodity)
+    unit_label = f"{'USD' if use_usd else 'HTG'}/{common_unit}"
+    unit_suffix = f"/{common_unit}"
+    st.sidebar.caption(
+        f"Prices standardized to {unit_label}, converted from local retail "
+        "units (e.g. the 6 lb marmite)."
+    )
+
     # Date range
     min_date, max_date = get_date_range()
     date_range = st.sidebar.date_input(
@@ -672,7 +654,7 @@ def main():
     if stats:
         st.sidebar.metric(
             "Current Price (Mean)",
-            f"{currency_symbol}{stats['current_price']:.2f}",
+            f"{currency_symbol}{stats['current_price']:.2f}{unit_suffix}",
             delta=(
                 f"{stats.get('mom_change', 0):.1f}% MoM"
                 if "mom_change" in stats
@@ -685,7 +667,8 @@ def main():
 
         if "moving_avg_12m" in stats:
             st.sidebar.metric(
-                "12-Month Moving Avg", f"{currency_symbol}{stats['moving_avg_12m']:.2f}"
+                "12-Month Moving Avg",
+                f"{currency_symbol}{stats['moving_avg_12m']:.2f}{unit_suffix}",
             )
 
         st.sidebar.caption(f"As of {stats['current_date']}")
@@ -724,20 +707,17 @@ def main():
                 "mean_price_usd",
                 "min_price_htg",
                 "max_price_htg",
+                "min_price_usd",
+                "max_price_usd",
             ]:
                 if col in plot_df.columns:
                     plot_df[col] = plot_df[col].interpolate(method="linear")
 
             plot_df = plot_df.reset_index().rename(columns={"index": "period_date"})
 
-            # Calculate min/max in selected currency
-            if use_usd:
-                ratio = plot_df["mean_price_usd"] / plot_df["mean_price_htg"]
-                min_price = plot_df["min_price_htg"] * ratio
-                max_price = plot_df["max_price_htg"] * ratio
-            else:
-                min_price = plot_df["min_price_htg"]
-                max_price = plot_df["max_price_htg"]
+            # Min/max in selected currency
+            min_price = plot_df["min_price_usd" if use_usd else "min_price_htg"]
+            max_price = plot_df["max_price_usd" if use_usd else "max_price_htg"]
 
             # Create figure
             fig = go.Figure()
@@ -779,7 +759,7 @@ def main():
                     name="Actual Price",
                     line=dict(color="#1f77b4", width=2),
                     marker=dict(size=4),
-                    hovertemplate=f"Date: %{{x|%Y-%m}}<br>Price: {currency_symbol}%{{y:.2f}}<extra></extra>",
+                    hovertemplate=f"Date: %{{x|%Y-%m}}<br>Price: {currency_symbol}%{{y:.2f}}{unit_suffix}<extra></extra>",
                 )
             )
 
@@ -807,7 +787,7 @@ def main():
                                 mode="lines",
                                 line=dict(color="red", width=2, dash="dot"),
                                 showlegend=False,
-                                hovertemplate=f"Date: %{{x|%Y-%m}}<br>Price: {currency_symbol}%{{y:.2f}} (interpolated)<extra></extra>",
+                                hovertemplate=f"Date: %{{x|%Y-%m}}<br>Price: {currency_symbol}%{{y:.2f}}{unit_suffix} (interpolated)<extra></extra>",
                             )
                         )
 
@@ -824,7 +804,7 @@ def main():
 
             fig.update_layout(
                 xaxis_title="Date",
-                yaxis_title=f"Price ({currency.split()[0]})",
+                yaxis_title=f"Price ({unit_label})",
                 hovermode="x unified",
                 legend=dict(orientation="h", yanchor="bottom", y=1.02),
                 margin=dict(l=0, r=0, t=30, b=0),
@@ -839,7 +819,7 @@ def main():
                 display_df = mean_df[["period_date", price_col, "num_markets"]].copy()
                 display_df.columns = [
                     "Date",
-                    f"Mean Price ({currency.split()[0]})",
+                    f"Mean Price ({unit_label})",
                     "# Markets",
                 ]
                 display_df["Date"] = display_df["Date"].dt.strftime("%Y-%m")
@@ -880,7 +860,7 @@ def main():
                     mode="lines",
                     name="Mean (All Markets)",
                     line=dict(color="black", width=3),
-                    hovertemplate=f"Mean: {currency_symbol}%{{y:.2f}}<extra></extra>",
+                    hovertemplate=f"Mean: {currency_symbol}%{{y:.2f}}{unit_suffix}<extra></extra>",
                 )
             )
 
@@ -896,13 +876,13 @@ def main():
                             name=market,
                             line=dict(color=colors[i % len(colors)], width=1.5),
                             opacity=0.7,
-                            hovertemplate=f"{market}: {currency_symbol}%{{y:.2f}}<extra></extra>",
+                            hovertemplate=f"{market}: {currency_symbol}%{{y:.2f}}{unit_suffix}<extra></extra>",
                         )
                     )
 
             fig.update_layout(
                 xaxis_title="Date",
-                yaxis_title=f"Price ({currency.split()[0]})",
+                yaxis_title=f"Price ({unit_label})",
                 hovermode="x unified",
                 legend=dict(orientation="h", yanchor="bottom", y=1.02),
                 margin=dict(l=0, r=0, t=30, b=0),
@@ -918,9 +898,9 @@ def main():
                 latest_df = filtered_market_df[
                     filtered_market_df["period_date"] == latest_date
                 ][["market", market_price_col]].copy()
-                latest_df.columns = ["Market", f"Price ({currency.split()[0]})"]
+                latest_df.columns = ["Market", f"Price ({unit_label})"]
                 latest_df = latest_df.sort_values(
-                    f"Price ({currency.split()[0]})", ascending=False
+                    f"Price ({unit_label})", ascending=False
                 )
                 st.dataframe(latest_df, use_container_width=True)
 
@@ -1026,7 +1006,7 @@ def main():
                             name="Historical (Actual)",
                             line=dict(color="blue", width=2),
                             marker=dict(size=4),
-                            hovertemplate=f"Date: %{{x}}<br>Price: {currency_symbol}%{{y:.2f}}<extra></extra>",
+                            hovertemplate=f"Date: %{{x}}<br>Price: {currency_symbol}%{{y:.2f}}{unit_suffix}<extra></extra>",
                         )
                     )
 
@@ -1038,7 +1018,7 @@ def main():
                             mode="lines",
                             name="Forecast",
                             line=dict(color="red", width=2, dash="dash"),
-                            hovertemplate=f"Date: %{{x}}<br>Forecast: {currency_symbol}%{{y:.2f}}<extra></extra>",
+                            hovertemplate=f"Date: %{{x}}<br>Forecast: {currency_symbol}%{{y:.2f}}{unit_suffix}<extra></extra>",
                         )
                     )
 
@@ -1081,7 +1061,7 @@ def main():
                     fig.update_layout(
                         title=f"Market Average Forecast - {selected_commodity}",
                         xaxis_title="Date",
-                        yaxis_title=f"Price ({currency.split()[0]})",
+                        yaxis_title=f"Price ({unit_label})",
                         hovermode="x unified",
                         legend=dict(orientation="h", yanchor="bottom", y=1.02),
                         height=500,
@@ -1098,12 +1078,16 @@ def main():
                         ].copy()
                         table_df.columns = [
                             "Date",
-                            "Forecast",
-                            "95% Lower",
-                            "95% Upper",
+                            f"Forecast ({unit_label})",
+                            f"95% Lower ({unit_label})",
+                            f"95% Upper ({unit_label})",
                         ]
                         table_df["Date"] = table_df["Date"].dt.strftime("%Y-%m")
-                        for col in ["Forecast", "95% Lower", "95% Upper"]:
+                        for col in [
+                            f"Forecast ({unit_label})",
+                            f"95% Lower ({unit_label})",
+                            f"95% Upper ({unit_label})",
+                        ]:
                             table_df[col] = table_df[col].apply(
                                 lambda x: f"{currency_symbol}{x:.2f}"
                             )
@@ -1181,7 +1165,7 @@ def main():
                                     name=f"{market_name}",
                                     line=dict(color=color, width=2),
                                     legendgroup=market_name,
-                                    hovertemplate=f"{market_name}<br>Date: %{{x}}<br>Price: {currency_symbol}%{{y:.2f}}<extra></extra>",
+                                    hovertemplate=f"{market_name}<br>Date: %{{x}}<br>Price: {currency_symbol}%{{y:.2f}}{unit_suffix}<extra></extra>",
                                 )
                             )
 
@@ -1201,7 +1185,7 @@ def main():
                                     line=dict(color=color, width=2, dash="dash"),
                                     legendgroup=market_name,
                                     showlegend=False,
-                                    hovertemplate=f"{market_name} Forecast<br>Date: %{{x}}<br>Price: {currency_symbol}%{{y:.2f}}<extra></extra>",
+                                    hovertemplate=f"{market_name} Forecast<br>Date: %{{x}}<br>Price: {currency_symbol}%{{y:.2f}}{unit_suffix}<extra></extra>",
                                 )
                             )
 
@@ -1237,7 +1221,7 @@ def main():
                     fig.update_layout(
                         title=f"Individual Market Forecasts - {selected_commodity}",
                         xaxis_title="Date",
-                        yaxis_title=f"Price ({currency.split()[0]})",
+                        yaxis_title=f"Price ({unit_label})",
                         hovermode="x unified",
                         legend=dict(orientation="v", yanchor="top", y=1),
                         height=600,
@@ -1261,9 +1245,9 @@ def main():
                                         {
                                             "Market": market_name,
                                             "Date": row["ds"].strftime("%Y-%m"),
-                                            "Forecast": f"{currency_symbol}{row['yhat']:.2f}",
-                                            "95% Lower": f"{currency_symbol}{row['yhat_lower']:.2f}",
-                                            "95% Upper": f"{currency_symbol}{row['yhat_upper']:.2f}",
+                                            f"Forecast ({unit_label})": f"{currency_symbol}{row['yhat']:.2f}",
+                                            f"95% Lower ({unit_label})": f"{currency_symbol}{row['yhat_lower']:.2f}",
+                                            f"95% Upper ({unit_label})": f"{currency_symbol}{row['yhat_upper']:.2f}",
                                         }
                                     )
 
