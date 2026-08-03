@@ -31,6 +31,15 @@ class TestMeanPrices:
         assert df["min_price_usd"].iloc[0] == pytest.approx(RICE_M1 * FX)
         assert df["max_price_usd"].iloc[0] == pytest.approx(RICE_M2 * FX)
 
+    def test_nan_rows_do_not_poison_aggregates(self, con):
+        """Missing observations arrive as float NaN (not SQL NULL); one NaN
+        row must not turn a month's mean/min/max into NaN."""
+        for product in ("Rice (Milled)", "Refined Vegetable Oil"):
+            df = queries.mean_prices(con, product)
+            assert df.notna().all().all(), f"NaN leaked into {product} aggregates"
+        df = queries.mean_prices(con, "Rice (Milled)")
+        assert (df["num_markets"] == 2).all()  # NaN-only market not counted
+
     def test_charcoal_bag_series_excluded(self, con):
         """The per-bag series (no standardized price) must not blend into the
         mean — this was wrong when the query averaged raw `value`."""

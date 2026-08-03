@@ -33,7 +33,8 @@ def con():
 
     con.execute(
         "INSERT INTO markets (id, fews_id, fnid, name) VALUES "
-        "(1, 100, 'HT01', 'Port-au-Prince'), (2, 101, 'HT02', 'Cap Haitien')"
+        "(1, 100, 'HT01', 'Port-au-Prince'), (2, 101, 'HT02', 'Cap Haitien'), "
+        "(3, 102, 'HT03', 'Jacmel')"
     )
     con.execute(
         "INSERT INTO products (id, name, product_source) VALUES "
@@ -72,6 +73,12 @@ def con():
         # Charcoal: convertible 6 lb series AND non-convertible bag series
         obs(1, 3, 1, month, 150.0, 150.0 / KG_PER_6LB)
         obs(1, 3, 3, month, 2500.0, None)
+
+    # The FEWS API publishes missing observations as float NaN, not SQL NULL.
+    # One NaN row alongside real data — must not poison the month's AVG().
+    nan = float("nan")
+    obs(3, 1, 1, "2025-01-31", nan, nan)
+    obs(2, 2, 2, "2025-01-31", nan, nan)
 
     yield con
     con.close()

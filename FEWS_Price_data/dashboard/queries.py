@@ -5,8 +5,11 @@ All prices are standardized to common units: HTG values come from
 `common_unit_price` (HTG per kg for weight-based products, HTG per liter for
 volume-based ones) and USD values from `common_currency_price` (USD per the
 same common unit). Observations that FEWS NET cannot standardize (e.g.
-charcoal sold by the bag) have NULL common prices and are excluded, so a
+charcoal sold by the bag) have no common price and are excluded, so a
 product reported in several native units is never averaged across them.
+
+Missing values arrive from the API as float NaN, not SQL NULL — and one NaN
+poisons a whole AVG() — so filters must use isfinite(), never IS NOT NULL.
 """
 
 import pandas as pd
@@ -27,7 +30,7 @@ def mean_prices(con, commodity: str) -> pd.DataFrame:
             COUNT(DISTINCT po.market_id) AS num_markets
         FROM price_observations po
         JOIN products p ON po.product_id = p.id
-        WHERE p.name = ? AND po.common_unit_price IS NOT NULL
+        WHERE p.name = ? AND isfinite(po.common_unit_price)
         GROUP BY po.period_date
         ORDER BY po.period_date
     """,
@@ -49,7 +52,7 @@ def market_prices(con, commodity: str) -> pd.DataFrame:
         FROM price_observations po
         JOIN markets m ON po.market_id = m.id
         JOIN products p ON po.product_id = p.id
-        WHERE p.name = ? AND po.common_unit_price IS NOT NULL
+        WHERE p.name = ? AND isfinite(po.common_unit_price)
         ORDER BY po.period_date, m.name
     """,
         [commodity],
@@ -66,7 +69,7 @@ def common_unit(con, commodity: str) -> str:
         FROM price_observations po
         JOIN products p ON po.product_id = p.id
         JOIN units u ON po.unit_id = u.id
-        WHERE p.name = ? AND po.common_unit_price IS NOT NULL
+        WHERE p.name = ? AND isfinite(po.common_unit_price)
           AND u.common_unit IS NOT NULL
         GROUP BY u.common_unit
         ORDER BY COUNT(*) DESC

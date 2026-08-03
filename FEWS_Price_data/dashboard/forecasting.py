@@ -76,7 +76,7 @@ def get_price_data(
     JOIN products p ON po.product_id = p.id
     JOIN markets m ON po.market_id = m.id
     WHERE p.name = ?
-    AND po.{price_col} IS NOT NULL
+    AND isfinite(po.{price_col})
     ORDER BY m.name, po.period_date
     """
 
