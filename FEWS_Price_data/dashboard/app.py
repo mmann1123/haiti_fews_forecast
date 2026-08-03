@@ -568,9 +568,10 @@ def main():
     common_unit = get_common_unit(selected_commodity)
     unit_label = f"{'USD' if use_usd else 'HTG'}/{common_unit}"
     unit_suffix = f"/{common_unit}"
+    unit_example = "the 6 lb marmite" if common_unit == "kg" else "the gallon"
     st.sidebar.caption(
         f"Prices standardized to {unit_label}, converted from local retail "
-        "units (e.g. the 6 lb marmite)."
+        f"units (e.g. {unit_example})."
     )
 
     # Date range
