@@ -61,8 +61,10 @@ def get_price_data(
     if owns_conn:
         conn = duckdb.connect(db_path, read_only=True)
 
-    # Determine price column based on currency
-    price_col = "value" if currency == "HTG" else "common_currency_price"
+    # Standardized per-kg/L price columns: HTG per common unit, or USD per
+    # common unit. Never `value`, which is in the native retail unit (marmite,
+    # gallon, ...) and can mix units within one product (e.g. charcoal).
+    price_col = "common_unit_price" if currency == "HTG" else "common_currency_price"
 
     query = f"""
     SELECT 
@@ -74,7 +76,7 @@ def get_price_data(
     JOIN products p ON po.product_id = p.id
     JOIN markets m ON po.market_id = m.id
     WHERE p.name = ?
-    AND po.{price_col} IS NOT NULL
+    AND isfinite(po.{price_col})
     ORDER BY m.name, po.period_date
     """
 
